@@ -1,0 +1,11 @@
+{
+	"name": "httplistener",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2015, Dima",
+	"authors": ["Dima"],
+	"versions": ["VibeCustomMain"],
+	"dependencies": {
+		"vibe-d": "~>0.7.27",
+		"ddbc": ">=0.2.11"
+	}
+}

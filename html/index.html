@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<title>Test</title>
+		<script src="js/vue.js"></script>
+		<script src="js/vue-router.js"></script>
+		<script src="js/vue-resource.js"></script>
+		<script src="js/authorization.js"></script>
+		<script src="js/pagecontent.js"></script>
+		<script src="js/notification.js"></script>
+		<script src="js/app.js"></script>
+	
+		<link href="css/common.css" rel="stylesheet">
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<div id="app">
+			<div class="container-fluid">
+				<nav class="navbar navbar-default">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<a class="navbar-brand" href="#">
+								<img alt="Brand" src="">
+							</a>
+						</div>
+					</div>
+					     <component :username.sync="username" :password.sync="password" :is="topMenuView"></component>
+				<div>{{username}}</div>
+				<div>{{password}}</div>
+				</nav>
+				<div class="row">
+					<div class="col-md-2">.col-md-8</div>
+					<div class="col-md-10">
+							<component :is="contentView"></component>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-footer">Panel footer</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
