@@ -5,20 +5,22 @@ var guestContent = Vue.extend({
       <div v-for="question in questions">
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
+            
             <!-- First Level -->
             <div v-for="answers in question.answers">
               <label v-if="!question.isRadioButton"><span class="answers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="answers"><input type="radio" class="big-checkbox" name="myvalue"/>{{answers.answer}}</span></label>
               <span v-if="answers.isTextInput"><input type="text"/></span>
-                <!-- Second Level -->
-                  {{answers.isSelected}}
                 
+                <!-- Second Level -->
+                  {{answers.isSelected}}               
                      <div v-if="answers.isSelected">
                          <div v-for="answers in answers.answers">                         
                             <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                            <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                        
+                            <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>                       
+                               
                                <!-- Third Level -->
+                               {{answers.isSelected}}   
                                <div v-if="answers.isSelected">  
                                    <div v-for="sub in answers.suba">
                                       <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
@@ -26,10 +28,7 @@ var guestContent = Vue.extend({
                                    </div>
                                 </div>    
                          </div>
-
-                      </div>     
-
-                   
+                      </div>                        
                 </div>
             </div>
          </template>
