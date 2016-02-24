@@ -50,15 +50,15 @@
 																																[
 																																	{
 																																		"id":1,
-																																		"subanswer": "Розы",
-																																		"subisSelected" : 0,
+																																		"answer": "Розы",
+																																		"isSelected" : 0,
 																																		"isRadioButton": true
 
 																																	},
 																																	{
 																																		"id":2,
-																																		"subanswer": "Мимозы",
-																																		"subisSelected" : 0,
+																																		"answer": "Мимозы",
+																																		"isSelected" : 0,
 																																		"isRadioButton": true
 																																		
 																																	}
