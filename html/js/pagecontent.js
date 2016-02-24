@@ -5,18 +5,25 @@ var guestContent = Vue.extend({
       <div v-for="question in questions">
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
+            <!-- First Level -->
             <div v-for="answers in question.answers">
               <label v-if="!question.isRadioButton"><span class="answers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="answers"><input type="radio" class="big-checkbox" name="myvalue"/>{{answers.answer}}</span></label>
               <span v-if="answers.isTextInput"><input type="text"/></span>
-                <div v-for="answers in answers.answers">
-                    <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                    <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                <!-- Second Level -->
+                  {{answers.isSelected}}
+                <div v-show="answers.isSelected">
+                  <div v-for="answers in answers.answers">
+
+                      
+                        <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                        <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                             <!-- Third Level -->
                              <div v-for="sub in answers.suba">
                                 <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
                                 <label v-if="sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>                             
                              </div>
-
+                    </div>
                 </div>
             </div>
          </template>

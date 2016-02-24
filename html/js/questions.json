@@ -5,27 +5,27 @@
 									{
 										"id" : 1,
 										"answer":	"Федеральные органы исполнительной власти",
-										"isSelected" : 0
+										"isSelected" : false
 									}, 
 									{	"id" : 2,
 										 "answer": "Региональные органы исполнительной власти",
-										 "isSelected" : 0
+										 "isSelected" : true
 									}, 
 									{	 "id" : 3,
 										 "answer": "Местные административные органы управления",
-										 "isSelected" : 0
+										 "isSelected" : false
 									}, 
 									{	 "id" : 4,
 										 "answer": "Некоммерческие организации",
-										"isSelected" : 0
+										"isSelected" : false
 									}, 
 									{	 "id" : 5,
 										 "answer": "Частное лицо",
-										 "isSelected" : 0
+										 "isSelected" : false
 									}, 
 									{	 "id" : 6,
 										 "answer": "Другое",
-										 "isSelected" : 0
+										 "isSelected" : false
 									}
 								 ],
 						"MaxAllowedChoice" : 1,
@@ -43,22 +43,22 @@
 																													[
 																														{
 																															"id":1,
-																															"answer": "Растеневодство",
-																															"isSelected" : 0,
+																															"subanswer": "Растеневодство",
+																															"isSelected" : true,
 																															"isRadioButton": true,
 																																"suba":
 																																[
 																																	{
 																																		"id":1,
 																																		"answer": "Розы",
-																																		"isSelected" : 0,
+																																		"isSelected" : false,
 																																		"isRadioButton": true
 
 																																	},
 																																	{
 																																		"id":2,
 																																		"answer": "Мимозы",
-																																		"isSelected" : 0,
+																																		"isSelected" : false,
 																																		"isRadioButton": true
 																																		
 																																	}
@@ -68,13 +68,13 @@
 																														},
 																														{
 																															"id":2,
-																															"answer": "Животноводство",
-																															"isSelected" : 0,
+																															"subanswer": "Животноводство",
+																															"isSelected" : false,
 																															"isRadioButton": true
 																															
 																														}
 																													],
-																											"isSelected" : 0
+																											"isSelected" : true
 																										}, 
 																										{
 																											"id" : 2,
@@ -83,34 +83,35 @@
 																													[
 																														{
 																															"id":1,
-																															"answer": "Вырубки",
-																															"isSelected" : 0
+																															"subanswer": "Вырубки",
+																															"isSelected" : false
 																														},
 																														{
 																															"id":2,
-																															"answer": "Состояние лесонасаждений",
-																															"isSelected" : 0
+																															"subanswer": "Состояние лесонасаждений",
+																															"isSelected" : false
 																														}
 																													],																											
-																											"isSelected" : 0
+																											"isSelected" : false
 																										},
 
 																										{
 																											"id": 3,
 																											"answer": "Землепользование",
-																											"isSelected" : 0
+																											"isSelected" : false
 																										}
 																									  ],
 					"MaxAllowedChoice" : 3,
 					"isEnabled" : true,
+					"isSelected" : false,
 					"NowSelected" : 0
 				},
 
 				{
 					"id": 3, "question": "What is your name?", "answers": [
-																			{"id": 1, "answer" : "Dima", "isSelected" : 0}, 
-																			{"id": 2, "answer": "Roma", "isSelected" : 0}, 
-																			{"id": 3, "answer": "Masha", "isSelected" : 0}],
+																			{"id": 1, "answer" : "Dima", "isSelected" : false}, 
+																			{"id": 2, "answer": "Roma", "isSelected" : false}, 
+																			{"id": 3, "answer": "Masha", "isSelected" : false}],
 					"MaxAllowedChoice" : 2,
 					"isEnabled" : true,
 					"NowSelected" : 0,
@@ -120,12 +121,13 @@
 				
 				{
 					"id": 4, "question": "Select one color", "answers": [
-																			{"id": 1, "answer" : "Green", "isSelected" : 0}, 
-																			{"id": 2, "answer": "Red", "isSelected" : 0}, 
-																			{"id": 3, "answer": "Blue", "isSelected" : 0, "isTextInput": true}],
+																			{"id": 1, "answer" : "Green", "isSelected" : false}, 
+																			{"id": 2, "answer": "Red", "isSelected" : false}, 
+																			{"id": 3, "answer": "Blue", "isSelected" : false, "isTextInput": true}],
 					"MaxAllowedChoice" : 2,
 					"isEnabled" : true,
 					"NowSelected" : 0,
+					"isSelected" : false,
 					"isRadioButton": true
 				}
 
