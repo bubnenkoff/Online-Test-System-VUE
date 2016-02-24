@@ -39,12 +39,12 @@
 																										{
 																											"id" : 1,
 																											"answer": "Сельское хозяйство",
-																											"subanswers":
+																											"answers":
 																													[
 																														{
 																															"id":1,
-																															"subanswer": "Растеневодство",
-																															"subisSelected" : 0,
+																															"answer": "Растеневодство",
+																															"isSelected" : 0,
 																															"isRadioButton": true,
 																																"suba":
 																																[
@@ -68,8 +68,8 @@
 																														},
 																														{
 																															"id":2,
-																															"subanswer": "Животноводство",
-																															"subisSelected" : 0,
+																															"answer": "Животноводство",
+																															"isSelected" : 0,
 																															"isRadioButton": true
 																															
 																														}
@@ -79,17 +79,17 @@
 																										{
 																											"id" : 2,
 																											"answer": "Лесное хозяйство",
-																											"subanswers":
+																											"answers":
 																													[
 																														{
 																															"id":1,
-																															"subanswer": "Вырубки",
-																															"subisSelected" : 0
+																															"answer": "Вырубки",
+																															"isSelected" : 0
 																														},
 																														{
 																															"id":2,
-																															"subanswer": "Состояние лесонасаждений",
-																															"subisSelected" : 0
+																															"answer": "Состояние лесонасаждений",
+																															"isSelected" : 0
 																														}
 																													],																											
 																											"isSelected" : 0

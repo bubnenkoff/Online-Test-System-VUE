@@ -9,10 +9,10 @@ var guestContent = Vue.extend({
               <label v-if="!question.isRadioButton"><span class="answers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="answers"><input type="radio" class="big-checkbox" name="myvalue"/>{{answers.answer}}</span></label>
               <span v-if="answers.isTextInput"><input type="text"/></span>
-                <div v-for="subanswers in answers.subanswers">
-                    <label v-if="!subanswers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{subanswers.subanswer}}</span></label>
-                    <label v-if="subanswers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{subanswers.subanswer}}</span></label>
-                             <div v-for="sub in subanswers.suba">
+                <div v-for="answers in answers.answers">
+                    <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                    <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                             <div v-for="sub in answers.suba">
                                 <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
                                 <label v-if="sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>                             
                              </div>
