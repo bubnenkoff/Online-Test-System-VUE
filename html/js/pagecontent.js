@@ -5,26 +5,23 @@ var guestContent = Vue.extend({
       <div v-for="question in questions">
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
-            
+
             <!-- First Level -->
-            <div v-for="answers in question.answers">
-              <label v-if="!question.isRadioButton"><span class="answers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-              <label v-if="question.isRadioButton"><span class="answers"><input type="radio" class="big-checkbox" name="myvalue"/>{{answers.answer}}</span></label>
-              <span v-if="answers.isTextInput"><input type="text"/></span>
+            <div v-for="firstLevelAnswer in question.answers">                
+              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{firstLevelAnswer.answer}}</span></label>
+              <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
+              <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
                 
-                <!-- Second Level -->
-                  {{answers.isSelected}}               
-                     <div v-if="answers.isSelected">
-                         <div v-for="answers in answers.answers">                         
-                            <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                            <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>                       
+                  <!-- Second Level -->
+                         <div v-for="secondLevelAnswer in firstLevelAnswer.answers">                         
+                            <label v-if="!secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{secondLevelAnswer.answer}}</span></label>
+                            <label v-if="secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{secondLevelAnswer.answer}}</span></label>                       
                                
                                <!-- Third Level -->
-                               {{answers.isSelected}}   
-                               <div v-if="answers.isSelected">  
-                                   <div v-for="sub in answers.suba">
-                                      <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
-                                      <label v-if="sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>                             
+                               <div v-if="secondLevelAnswer.isSelected">  
+                                   <div v-for="thirdLevelAnswer in secondLevelAnswer.answers">
+                                      <label v-if="!thirdLevelAnswer.isRadioButton"><span class="thirdLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{thirdLevelAnswer.answer}}</span></label>
+                                      <label v-if="thirdLevelAnswer.isRadioButton"><span class="thirdLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{thirdLevelAnswer.answer}}</span></label>                             
                                    </div>
                                 </div>    
                          </div>

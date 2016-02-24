@@ -5,17 +5,17 @@ label
     font-weight: normal !important;
 }
 
-.answers
+.firstLevelAnswer
 {
 margin-left: 10px;	
 }
 
-.subanswers
+.secondLevelAnswer
 {
 margin-left: 30px;	
 }
 
-.subsubanswers
+.thirdLevelAnswer
 {
 margin-left: 60px;	
 }
