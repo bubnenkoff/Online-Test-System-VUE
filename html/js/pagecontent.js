@@ -12,18 +12,24 @@ var guestContent = Vue.extend({
               <span v-if="answers.isTextInput"><input type="text"/></span>
                 <!-- Second Level -->
                   {{answers.isSelected}}
-                <div v-show="answers.isSelected">
-                  <div v-for="answers in answers.answers">
+                
+                     <div v-if="answers.isSelected">
+                         <div v-for="answers in answers.answers">                         
+                            <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                            <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+                        
+                               <!-- Third Level -->
+                               <div v-if="answers.isSelected">  
+                                   <div v-for="sub in answers.suba">
+                                      <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
+                                      <label v-if="sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>                             
+                                   </div>
+                                </div>    
+                         </div>
 
-                      
-                        <label v-if="!answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                        <label v-if="answers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
-                             <!-- Third Level -->
-                             <div v-for="sub in answers.suba">
-                                <label v-if="!sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>
-                                <label v-if="sub.isRadioButton"><span class="subsubanswers"><input type="checkbox" class="big-checkbox"/>{{sub.answer}}</span></label>                             
-                             </div>
-                    </div>
+                      </div>     
+
+                   
                 </div>
             </div>
          </template>

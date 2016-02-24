@@ -43,8 +43,8 @@
 																													[
 																														{
 																															"id":1,
-																															"subanswer": "Растеневодство",
-																															"isSelected" : false,
+																															"answer": "Растеневодство",
+																															"isSelected" : true,
 																															"isRadioButton": true,
 																																"suba":
 																																[
@@ -68,7 +68,7 @@
 																														},
 																														{
 																															"id":2,
-																															"subanswer": "Животноводство",
+																															"answer": "Животноводство",
 																															"isSelected" : false,
 																															"isRadioButton": true
 																															
@@ -83,16 +83,16 @@
 																													[
 																														{
 																															"id":1,
-																															"subanswer": "Вырубки",
+																															"answer": "Вырубки",
 																															"isSelected" : false
 																														},
 																														{
 																															"id":2,
-																															"subanswer": "Состояние лесонасаждений",
+																															"answer": "Состояние лесонасаждений",
 																															"isSelected" : false
 																														}
 																													],																											
-																											"isSelected" : false
+																											"isSelected" : true
 																										},
 
 																										{
