@@ -6,7 +6,15 @@ var guestContent = Vue.extend({
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
             <div v-for="answers in question.answers">
-              <h4>{{answers.answer}}</h4>
+              <label v-if="!question.isRadioButton"><span class="answers"><input type="checkbox" class="big-checkbox"/>{{answers.answer}}</span></label>
+              <label v-if="question.isRadioButton"><span class="answers"><input type="radio" class="big-checkbox" name="myvalue"/>{{answers.answer}}</span></label>
+              <span v-if="answers.isTextInput"><input type="text"/></span>
+                <div v-for="subanswers in answers.subanswers">
+                    <label v-if="!subanswers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{subanswers.subanswer}}</span></label>
+                    <label v-if="subanswers.isRadioButton"><span class="subanswers"><input type="checkbox" class="big-checkbox"/>{{subanswers.subanswer}}</span></label>
+   
+
+                </div>
             </div>
          </template>
       </div>  

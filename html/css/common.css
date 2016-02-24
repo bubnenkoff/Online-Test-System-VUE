@@ -1,2 +1,25 @@
 @import "bootstrap.css";
 
+label 
+{
+    font-weight: normal !important;
+}
+
+.answers
+{
+margin-left: 10px;	
+}
+
+.subanswers
+{
+margin-left: 30px;	
+}
+
+.subanswers
+{
+margin-left: 60px;	
+}
+
+
+
+.big-checkbox {width: 15px; height: 15px;}

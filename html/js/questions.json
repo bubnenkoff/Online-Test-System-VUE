@@ -29,7 +29,7 @@
 									}
 								 ],
 						"MaxAllowedChoice" : 1,
-						"isEnabled" : false,
+						"isEnabled" : true,
 						"NowSelected" : 0
 				},
 
@@ -44,12 +44,34 @@
 																														{
 																															"id":1,
 																															"subanswer": "Растеневодство",
-																															"subisSelected" : 0
+																															"subisSelected" : 0,
+																															"isRadioButton": true,
+																																"suba":
+																																[
+																																	{
+																																		"id":1,
+																																		"subanswer": "Розы",
+																																		"subisSelected" : 0,
+																																		"isRadioButton": true
+
+																																	},
+																																	{
+																																		"id":2,
+																																		"subanswer": "Мимозы",
+																																		"subisSelected" : 0,
+																																		"isRadioButton": true
+																																		
+																																	}
+																																	
+																																]
+																																
 																														},
 																														{
 																															"id":2,
 																															"subanswer": "Животноводство",
-																															"subisSelected" : 0
+																															"subisSelected" : 0,
+																															"isRadioButton": true
+																															
 																														}
 																													],
 																											"isSelected" : 0
@@ -93,6 +115,18 @@
 					"isEnabled" : true,
 					"NowSelected" : 0,
 					"foo":"TESTTEST"
+				},
+				
+				
+				{
+					"id": 4, "question": "Select one color", "answers": [
+																			{"id": 1, "answer" : "Green", "isSelected" : 0}, 
+																			{"id": 2, "answer": "Red", "isSelected" : 0}, 
+																			{"id": 3, "answer": "Blue", "isSelected" : 0, "isTextInput": true}],
+					"MaxAllowedChoice" : 2,
+					"isEnabled" : true,
+					"NowSelected" : 0,
+					"isRadioButton": true
 				}
 
 ]
