@@ -6,18 +6,19 @@ var guestContent = Vue.extend({
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
 
-            <!-- First Level -->
+          <!-- First Level -->
             <div v-for="firstLevelAnswer in question.answers">                
-              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{firstLevelAnswer.answer}}</span></label>
+              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-on:onclick="setIsSelectedTrue()"/>{{firstLevelAnswer.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
-                
-                  <!-- Second Level -->
+                   |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}}  
+
+                   <!-- Second Level -->
                          <div v-for="secondLevelAnswer in firstLevelAnswer.answers">                         
                             <label v-if="!secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{secondLevelAnswer.answer}}</span></label>
                             <label v-if="secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{secondLevelAnswer.answer}}</span></label>                       
-                               
-                               <!-- Third Level -->
+                           
+                            <!-- Third Level -->
                                <div v-if="secondLevelAnswer.isSelected">  
                                    <div v-for="thirdLevelAnswer in secondLevelAnswer.answers">
                                       <label v-if="!thirdLevelAnswer.isRadioButton"><span class="thirdLevelAnswer"><input type="checkbox" class="big-checkbox"/>{{thirdLevelAnswer.answer}}</span></label>
@@ -43,6 +44,7 @@ var guestContent = Vue.extend({
           ready() 
           { 
             this.getQuestionsContent()
+            
           },
           methods: 
           {
@@ -52,10 +54,14 @@ var guestContent = Vue.extend({
                 this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
-
+                  this.setIsSelectedTrue();
                 }); 
               
-             }
+              },
+              setIsSelectedTrue()
+              {
+                console.log(this.$get('questions'));
+              }
 
           }
 
