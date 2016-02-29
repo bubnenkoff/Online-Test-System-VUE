@@ -10,7 +10,7 @@ var guestContent = Vue.extend({
 
           <!-- First Level -->
             <div v-for="firstLevelAnswer in question.answers">                
-              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-on:onclick="setIsSelectedToTrue()"/>{{firstLevelAnswer.answer}}</span></label>
+              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="firstLevelAnswer.isSelected"/>{{firstLevelAnswer.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
                    |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}}  
@@ -56,7 +56,7 @@ var guestContent = Vue.extend({
                 this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
-                  this.setIsSelectedToTrue();
+                 // this.setIsSelectedToTrue();
                 }); 
               
               },
@@ -71,7 +71,7 @@ var guestContent = Vue.extend({
                       //this.$set('answer.isSelected', true);
                       console.log('Before: ', answer.isSelected);
                      // this.$set('answer.isSelected', true); //warining: You are setting a non-existent path "answer.isSelected"
-                      this.$set('answer.isSelected', true);  // so look like I should to do like this to change value
+                      answer.isSelected = true;  // so look like I should to do like this to change value
                       console.log('After: ', answer.isSelected);
                     }
                 }

@@ -28,7 +28,7 @@
 										 "isSelected" : false
 									}
 								 ],
-						"MaxAllowedChoice" : 1,
+						"MaxAllowedChoice" : 3,
 						"isEnabled" : true,
 						"NowSelected" : 0
 				},
