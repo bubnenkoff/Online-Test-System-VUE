@@ -41,6 +41,7 @@ var guestContent = Vue.extend({
           return {
              questions: []
           }
+          var x=1;
 
           },
           ready() 
@@ -48,6 +49,21 @@ var guestContent = Vue.extend({
             this.getQuestionsContent()
             
           },
+
+          watch: 
+          {
+              questions : 
+             {
+                handler: function(val, oldVal) {
+                  this.foo();
+                },
+                  deep: true
+                
+              },
+            
+          },
+
+
           methods: 
           {
              
@@ -60,6 +76,14 @@ var guestContent = Vue.extend({
                 }); 
               
               },
+
+              
+              foo()
+              {
+                console.log("dfd");
+                console.log("dfdsss");
+              },
+
               setIsSelectedToTrue()
               {
                 //console.log(this.$get('questions'));
