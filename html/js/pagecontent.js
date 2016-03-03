@@ -10,7 +10,7 @@ var guestContent = Vue.extend({
 
           <!-- First Level -->
             <div v-for="firstLevelAnswer in question.answers">                
-              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="firstLevelAnswer.isSelected"/>{{firstLevelAnswer.answer}}</span></label>
+              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="firstLevelAnswer.isSelected" />{{firstLevelAnswer.answer}}</span></label>
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
                    |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}}  
@@ -84,7 +84,6 @@ var guestContent = Vue.extend({
 
               },
 
-              
               processOneQuestion: function (question)
               {
                 var isSelectedCount = 0;
