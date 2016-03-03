@@ -52,54 +52,59 @@ var guestContent = Vue.extend({
 
           watch: 
           {
-              questions : 
+             questions : //what we are watching
              {
                 handler: function(val, oldVal) {
-                  this.foo();
+                  this.calculateIsSelectedAnswers();
                 },
                   deep: true
-                
               },
             
           },
 
 
           methods: 
-          {
-             
-             getQuestionsContent()
+          { 
+             getQuestionsContent : function()
              {
                 this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
-                 // this.setIsSelectedToTrue();
                 }); 
-              
               },
 
-              
-              foo()
+              calculateIsSelectedAnswers : function() 
               {
-                console.log("dfd");
-                console.log("dfdsss");
-              },
-
-              setIsSelectedToTrue()
-              {
-                //console.log(this.$get('questions'));
+                
                 for (var question of this.questions)
-                {
-                    //console.log(question.answers); // array of answers
-                    for(var answer of question.answers)
-                    {
-                      //this.$set('answer.isSelected', true);
-                      console.log('Before: ', answer.isSelected);
-                     // this.$set('answer.isSelected', true); //warining: You are setting a non-existent path "answer.isSelected"
-                      answer.isSelected = true;  // so look like I should to do like this to change value
-                      console.log('After: ', answer.isSelected);
-                    }
+                { 
+                   this.processOneQuestion(question);
                 }
+
+
+              },
+
+              
+              processOneQuestion: function (question)
+              {
+                var isSelectedCount = 0;
+
+                for(var answer of question.answers)
+                {
+                  if(answer.isSelected)
+                  {
+                    isSelectedCount++;
+                  }
+                  if(question.MaxAllowedChoice == isSelectedCount)
+                  {
+                    console.log("isSelectedCount : " + isSelectedCount + " | question.MaxAllowedChoice: " + question.MaxAllowedChoice);
+                  }
+                }
+
+
+
               }
+
 
           }
 
