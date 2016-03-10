@@ -10,10 +10,11 @@ var guestContent = Vue.extend({
 
           <!-- First Level -->
             <div v-for="firstLevelAnswer in question.answers">                
-              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="firstLevelAnswer.isSelected" />{{firstLevelAnswer.answer}}</span></label>
+              <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" :disabled="firstLevelAnswer.isDisabled" v-model="firstLevelAnswer.isSelected" />{{firstLevelAnswer.answer}}</span></label> 
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
-                   |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}}  
+                   |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}} 
+                   +>|  <span>{{firstLevelAnswer.isDisabled}}</span> 
 
                    <!-- Second Level -->
                          <div v-for="secondLevelAnswer in firstLevelAnswer.answers">                         
@@ -94,10 +95,24 @@ var guestContent = Vue.extend({
                   {
                     isSelectedCount++;
                   }
+
                   if(question.MaxAllowedChoice == isSelectedCount)
                   {
                     console.log("isSelectedCount : " + isSelectedCount + " | question.MaxAllowedChoice: " + question.MaxAllowedChoice);
+                    if(!answer.isSelected) // disable unselected
+                    {
+                      answer.isDisabled = true;
+                    }
                   }
+
+                  if(question.MaxAllowedChoice < isSelectedCount) // if MaxAllowedChoice less then isSelectedCount set iterated iterated answers isDisabled to false
+                  {
+                    // if(!answer.isSelected) // disable unselected
+                    // {
+                      answer.isDisabled = false;
+                    // }
+                  }
+
                 }
 
 

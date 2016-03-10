@@ -5,32 +5,39 @@
 									{
 										"id" : 1,
 										"answer":	"Федеральные органы исполнительной власти",
-										"isSelected" : false
+										"isSelected" : false,
+										"isDisabled" : false
 									}, 
 									{	"id" : 2,
 										 "answer": "Региональные органы исполнительной власти",
-										 "isSelected" : false
+										 "isSelected" : false,
+										 "isDisabled" : false
 									}, 
 									{	 "id" : 3,
 										 "answer": "Местные административные органы управления",
-										 "isSelected" : false
+										 "isSelected" : false,
+										 "isDisabled" : false
 									}, 
 									{	 "id" : 4,
 										 "answer": "Некоммерческие организации",
-										"isSelected" : false
+										"isSelected" : false,
+										"isDisabled" : false
 									}, 
 									{	 "id" : 5,
 										 "answer": "Частное лицо",
-										 "isSelected" : false
+										 "isSelected" : false,
+										 "isDisabled" : false
 									}, 
 									{	 "id" : 6,
 										 "answer": "Другое",
-										 "isSelected" : false
+										 "isSelected" : false,
+										 "isDisabled" : false
 									}
 								 ],
 						"MaxAllowedChoice" : 3,
 						"isEnabled" : true,
 						"NowSelected" : 0
+
 				},
 
 				{
