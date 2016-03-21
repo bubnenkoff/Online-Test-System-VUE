@@ -172,10 +172,11 @@
 					"isEnabled" : true,
 					"minValue" : 0,
 					"maxValue" : 0,
-					"value" : 4,
+					"value" : 0,
 					"isEnabled" : true,
 					"answers": []
-				}
+				},
+				{"username": "guest"}
 
 ]
 

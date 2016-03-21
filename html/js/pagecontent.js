@@ -98,7 +98,10 @@ var guestContent = Vue.extend({
               {                
                 for (var question of this.questions)
                 { 
-                   this.processOneQuestion(question);
+                   if(question.question) // small hack to process only questions. We also have {user: name}
+                   {
+                    this.processOneQuestion(question);
+                   }
                 }
               },
 
