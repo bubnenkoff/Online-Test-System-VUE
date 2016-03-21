@@ -5,7 +5,7 @@ label
     font-weight: normal !important;
 }
 
-.firstLevelAnswer
+.firstLevelAnswer, .firstLevelSlider
 {
 margin-left: 10px;	
 }
@@ -18,6 +18,59 @@ margin-left: 30px;
 .thirdLevelAnswer
 {
 margin-left: 60px;	
+}
+
+.firstLevelSlider
+{
+	margin-right: 360px;	
+
+}
+
+
+.v-range-slider {
+  display: flex;
+  align-items: center;
+  padding: 2px 11px;
+}
+.v-range-slider input[type=range] {
+  -webkit-appearance: none;
+  flex: 1;
+  display: block;
+  overflow: hidden;
+  margin: 5px 10px;
+  padding: 16px 1px 20px;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.v-range-slider input::-webkit-slider-runnable-track {
+  position: relative;
+  height: 2px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+.v-range-slider input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  position: relative;
+  margin-top: -8px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: #000066;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+.v-range-slider input::-webkit-slider-thumb:before {
+  position: absolute;
+  display: inline-block;
+  content: '';
+  top: 12px;
+  left: -2001px;
+  width: 2000px;
+  height: 2px;
+  background: var(--vui-green);
 }
 
 

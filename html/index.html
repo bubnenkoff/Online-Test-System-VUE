@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Test</title>
+
 		<script src="js/vue.js"></script>
 		<script src="js/vue-router.js"></script>
 		<script src="js/vue-resource.js"></script>
@@ -8,7 +9,7 @@
 		<script src="js/pagecontent.js"></script>
 		<script src="js/notification.js"></script>
 		<script src="js/app.js"></script>
-	
+		
 		<link href="css/common.css" rel="stylesheet">
 		<meta charset="utf-8">
 	</head>
@@ -31,13 +32,18 @@
 					<div class="col-md-2">.col-md-8</div>
 					<div class="col-md-10">
 							<component :is="contentView"></component>
+							<div id="slider"></div>
 					</div>
 				</div>
+
+	
+
 				<div class="panel panel-default">
 					<div class="panel-footer">Panel footer</div>
 				</div>
 			</div>
 		</div>
+
 	</body>
 
 </html>

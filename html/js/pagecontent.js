@@ -1,6 +1,7 @@
 "use strict";
 
 var guestContent = Vue.extend({
+  props: ['value','min','max','step'],
       template: `
 
         <p>Guest content</p>
@@ -10,16 +11,13 @@ var guestContent = Vue.extend({
 
           <!-- First Level -->
             <div v-for="firstLevelAnswer in question.answers"> 
-
-
-              
+             
               <label v-if="!question.isRadioButton"><span class="firstLevelAnswer"><input type="checkbox" class="big-checkbox" :disabled="firstLevelAnswer.isDisabled" v-model="firstLevelAnswer.isSelected" />{{firstLevelAnswer.answer}}</span></label> 
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
                
                  <div style="display: inline-block;" v-if="firstLevelAnswer.isTextBox"> 
-                    <span v-if="firstLevelAnswer.isSelected" v-model="firstLevelAnswer.userTextInputValue"><input type="text" name="myvalue"/>+ {{firstLevelAnswer.userTextInputValue}}</span>
-                      
-                  </div>
+                    <span v-if="firstLevelAnswer.isSelected"><input type="text" name="myvalue" v-model="firstLevelAnswer.userTextInputValue"/>+ {{firstLevelAnswer.userTextInputValue}}</span>                      
+                  </div>                
              
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
                    |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}} 
@@ -41,6 +39,17 @@ var guestContent = Vue.extend({
                       </div>                        
                 </div>
             </div>
+
+      <!-- Slider section -->
+     <div v-if="question.isSlider" class="firstLevelSlider"> 
+       <div class="v-range-slider">
+          <slot name="left">L</slot>
+          <input type="range" v-model="question.value" :value.sync="question.value" :min="min" :max="max" :step="step" :name="name">
+          <slot name="right">H</slot>
+        </div>
+      </div>
+
+
          </template>
       </div>  
  
@@ -51,7 +60,6 @@ var guestContent = Vue.extend({
           return {
              questions: []
           }
-          var x=1;
 
           },
           ready() 
@@ -83,16 +91,16 @@ var guestContent = Vue.extend({
                 }); 
               },
 
+
+
               calculateIsSelectedAnswers : function() 
-              {
-                
+              {                
                 for (var question of this.questions)
                 { 
                    this.processOneQuestion(question);
                 }
-
-
               },
+
 
               processOneQuestion: function (question)
               {

@@ -163,6 +163,18 @@
 					"isSelected" : false,
 					"isDisabled" : false,
 					"isRadioButton": true
+				},
+
+				{
+					"id": 5,
+					"question": "Select Range",
+					"isSlider" : true,
+					"isEnabled" : true,
+					"minValue" : 0,
+					"maxValue" : 0,
+					"value" : 4,
+					"isEnabled" : true,
+					"answers": []
 				}
 
 ]
