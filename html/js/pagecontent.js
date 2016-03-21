@@ -49,11 +49,12 @@ var guestContent = Vue.extend({
         </div>
       </div>
 
-
          </template>
-      </div>  
- 
-    </li>
+   </div>  
+   
+  <div class="sendButton"> 
+    <button type="button" class="btn btn-success">Отправить</button>
+  </div>
 
           `,
         data: function ()  {
