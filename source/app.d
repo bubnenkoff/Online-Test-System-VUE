@@ -20,9 +20,11 @@ DBConnect db;
 //    string datestamp = currentdt.toISOExtString;
 //}
 
+ParseConfig config;
 string roothtml;
 static this()
 {
+    
     roothtml = buildPath(getcwd, "html") ~ "\\";
     if(!roothtml.exists)
        writeln("[ERROR] HTML dir do not exists");     
@@ -30,7 +32,7 @@ static this()
 
 void main()
 {
-  
+    config = new ParseConfig();
     auto router = new URLRouter;
     router.get("/*", serveStaticFiles(roothtml ~ "\\"));    
     router.get("*", serveStaticFiles(roothtml ~ "static\\"));
@@ -38,7 +40,7 @@ void main()
     
     router.any("*", &accControl);
     router.any("/my", &action);
-    router.any("/stat", &statistic);
+    router.any("/questions", &getQuestions);
 
     router.any("/checkAuthorization", &checkAuthorization);
     router.any("/login", &login);
@@ -54,9 +56,10 @@ void main()
     settings.bindAddresses = ["::", "127.0.0.1"];
     settings.sessionStore = new MemorySessionStore; // SESSION
 
-    ParseConfig parseconfig = new ParseConfig();
-    writeln("\nHOST: ", parseconfig.dbhost);
-    db = new DBConnect(parseconfig);
+
+    writeln(config.allow_voting_for_unauthorized);
+    writeln("\nHOST: ", config.dbhost);
+    db = new DBConnect(config);
     getNumberOfQID(); // questionID
 
     writeln("--------sending data---------");
@@ -224,41 +227,54 @@ int [] getNumberOfQID()
     return result;
 }
 
-void statistic(HTTPServerRequest req, HTTPServerResponse res)
+void getQuestions(HTTPServerRequest req, HTTPServerResponse res)
 {
-   string result_json;
+    Json questions;
 
-    foreach(i, QID; getNumberOfQID) // now we need iterate all QID
+    if(config.allow_voting_for_unauthorized == "true") // NOT authorized!
     {
+       try
+       {
+        questions = req.json;
+        writeln("We got questions content!");
+        res.statusCode = 200;
+       }
+       catch (Exception e)
+       {
+        writeln("Can't parse incoming data as JSON");
+        writeln(e.msg);
+        writeln("------------------------------------------");
+       }
+    }
 
-        i++;
-        string query_string = "SELECT AID FROM otest.mytest WHERE QID=" ~ to!string(QID);
-        auto rs = db.stmt.executeQuery(query_string);
-        int [] result;
-        while (rs.next())
-        {
-            result ~= to!int(rs.getString(1));
-            //writeln(result);
+
+    if(config.allow_voting_for_unauthorized != "true") // registered only
+    {
+        if (req.session)
+        {   
+           try
+           {
+            questions = req.json;
+            writeln("We got questions content!");
+            res.statusCode = 200;
+             res.writeVoidBody;
+           }
+           catch (Exception e)
+           {
+            writeln("Can't parse incoming data as JSON");
+            writeln(e.msg);
+            writeln("------------------------------------------");
+           }
         }
 
-        string single_QID = "{" ~ `"` ~ to!string(QID) ~ `":` ~ to!string(result) ~ "}";
-       // writeln(single_QID);
-        result_json ~= single_QID ~ ",";
-        //writeln(result_json);
-        //writeln;
-        
-        string result_json1;
-        result_json1 ~= ("[" ~ result_json ~ "]").replace("},]","}]");
-
-        // _Very_ dirty hack to send JSON array of QID and their result at _last_ iteration! 
-        if((i == getNumberOfQID.length - 1))
+        else
         {
-            writeln(result_json1);
-            res.writeBody(to!string(result_json1));
+            res.statusCode = 401; // unauthorized!
+            writeln("User unauthorized and can't vote!");
         }
-        
-    } 
+    }
 
+   res.writeVoidBody;
 }
 
 

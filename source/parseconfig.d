@@ -18,6 +18,8 @@ class ParseConfig
 	string dbport;
 	string HTMLroot;
 
+	string allow_voting_for_unauthorized;
+
 
 this()
 	{
@@ -41,6 +43,8 @@ this()
 				dbhost = config["dbhost"].toStr;
 				dbport = config["dbport"].toStr;
 				HTMLroot = config["HTMLroot"].toStr;
+
+				allow_voting_for_unauthorized = config["allow_voting_for_unauthorized"].toStr;
 			}
 			catch (Exception msg)
 			{

@@ -53,7 +53,7 @@ var guestContent = Vue.extend({
    </div>  
    
   <div class="sendButton"> 
-    <button type="button" class="btn btn-success">Отправить</button>
+    <button v-on:click="postQuestionsContent()" :disabled="sendButtonDisable" type="button" class="btn btn-success">Отправить</button>
   </div>
 
           `,
@@ -66,7 +66,6 @@ var guestContent = Vue.extend({
           ready() 
           { 
             this.getQuestionsContent()
-            
           },
 
           watch: 
@@ -89,10 +88,32 @@ var guestContent = Vue.extend({
                 this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
-                }); 
+                }, function(response)
+                {
+                  console.log("Can't get questions.json from server");
+                  console.log("Server response: ", response.status);
+                }
+                ); 
               },
 
+             postQuestionsContent : function()
+             {
+                var sendButtonDisable = false; // send Button is active
+                this.$http.post('http://127.0.0.1:8080/questions', JSON.stringify(this.questions)).then(function(response)
+                {
+                   console.log("Server response: ", response.status);
+                   sendButtonDisable = true;
 
+                }, function(response)
+                  {
+                    console.log("Server report that it can't process request");
+                    if(response.status == 401)
+                    {
+                      console.log("User not authorized! ", response.status);
+                    }
+                  }
+                ); 
+              },
 
               calculateIsSelectedAnswers : function() 
               {                
