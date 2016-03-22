@@ -102,6 +102,11 @@ var guestContent = Vue.extend({
                    {
                     this.processOneQuestion(question);
                    }
+
+                   if(question.username) // it's user info field. We should put user name to JSON 
+                   {
+                    question.username = App.username; // from Global Vue instance
+                   }
                 }
               },
 
@@ -115,7 +120,6 @@ var guestContent = Vue.extend({
                   if(answer.isSelected)
                   {
                     isSelectedCount++;
-                   
                   }
                   console.log("isSelectedCount --> ", isSelectedCount);
 
