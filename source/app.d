@@ -230,6 +230,7 @@ int [] getNumberOfQID()
 void getQuestions(HTTPServerRequest req, HTTPServerResponse res)
 {
     Json questions;
+    Json answer;
 
     if(config.allow_voting_for_unauthorized == "true") // NOT authorized!
     {
@@ -274,7 +275,7 @@ void getQuestions(HTTPServerRequest req, HTTPServerResponse res)
         }
     }
 
-   res.writeVoidBody;
+   res.writeJsonBody(answer);
 }
 
 
