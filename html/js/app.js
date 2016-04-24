@@ -96,6 +96,7 @@ App = new Vue ({ // App -- is need for overwrite global var. Global var need dec
       contentView: "guestcontent",
       username: "",
       password: "",
+      "sendButtonDisable": "aaaaaaaaaaa",
     }
   })
 

@@ -9,7 +9,7 @@ import std.stdio;
 import variantconfig;
 import dbconnect;
 
-class ParseConfig
+class Config
 {
 	string dbname;
 	string dbuser;

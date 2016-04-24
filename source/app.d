@@ -6,12 +6,11 @@ import std.datetime;
 import std.path;
 import std.file;
 
-import ddbc.all;
 import parseconfig;
 import dbconnect;
 import users;
 
-DBConnect db;
+import requests.http;
 
 //DateTime currentdt;
 //static this()
@@ -20,7 +19,6 @@ DBConnect db;
 //    string datestamp = currentdt.toISOExtString;
 //}
 
-ParseConfig config;
 string roothtml;
 static this()
 {
@@ -30,17 +28,30 @@ static this()
        writeln("[ERROR] HTML dir do not exists");     
 }
 
+Config config;
+
 void main()
 {
-    config = new ParseConfig();
+    config = new Config();
+    DBConnect dbconnect = new DBConnect(config);
+    if (dbconnect.checkServerStatus())
+    {
+        writeln("Server alive!");
+    }
+
+    else
+    {
+        writeln("Could not connect to server");
+        return;
+    }
+
+    foo();
+
     auto router = new URLRouter;
     router.get("/*", serveStaticFiles(roothtml ~ "\\"));    
     router.get("*", serveStaticFiles(roothtml ~ "static\\"));
-    router.get("/admin/*", &adminpage);
     
     router.any("*", &accControl);
-    router.any("/my", &action);
-    router.any("/questions", &getQuestions);
 
     router.any("/checkAuthorization", &checkAuthorization);
     router.any("/login", &login);
@@ -59,8 +70,6 @@ void main()
 
     writeln(config.allow_voting_for_unauthorized);
     writeln("\nHOST: ", config.dbhost);
-    db = new DBConnect(config);
-    getNumberOfQID(); // questionID
 
     writeln("--------sending data---------");
 
@@ -75,19 +84,35 @@ void accControl(HTTPServerRequest req, HTTPServerResponse res)
 
 AuthInfo _auth;
 
-
-void adminpage(HTTPServerRequest req, HTTPServerResponse res)
+void foo()
 {
-    if (req.session)
-    {
-        serveStaticFile(roothtml ~ "admin\\stat.html")(req,res);
-    }
-    else
-    {
-        res.writeBody("Access Deny", "text/plain");
-    }
+   writeln("!!!!!!!!!!");
+    string url = "http://localhost:8529/_db/testdb/_api/document/users/787145173283"; 
+    import std.experimental.logger;
+    globalLogLevel(LogLevel.info);
+    auto rq = Request();
+    auto rs = rq.get(url);
+    writeln(rs.responseBody.data!string);
+    writeln(rs.code);
+    writeln("!!!!!!!!!!");
 
+    /*
+    {
+    "login": "admin",
+    "firstname": "",
+    "lastname": "",
+    "password": "123",
+    "organization": "",
+    "lastvisit": "",
+    "tests" : 
+        {
+            "allowed": [],
+            "passed": []
+        }
 }
+    */
+}
+
 
 
 void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
@@ -129,157 +154,6 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
 }
 
 
-void action(HTTPServerRequest req, HTTPServerResponse res)
-{
-    // data-stamp for every request
-    DateTime currentdt = cast(DateTime)(Clock.currTime()); // It's better to declarate globally
-    string datestamp = currentdt.toISOExtString;
-   
-    // how get string from POST request here. And how get JSON object, if server send it.
-    //Json my = req.json;
-    Json results;
-    try
-    {
-        results = req.json;
-    }
-    catch (Exception e)
-    {
-        writeln("Can't parse incoming JSON string");
-        writeln(e.msg);
-    }
-    //writeln(result["QID"]);
-    writeln(results);
-    //writeln(results["MaxArea"]);
-    //writeln(to!string(results).lastIndexOf("MaxArea"));
-
-    // looking MinArea and MaxArea section
-    string MinArea;
-    string MaxArea;
-    foreach(section;results)
-    {
-        if(to!string(section).canFind("MinArea"))
-        {
-            writeln("MinArea: ", section["MinArea"].to!string);
-            MinArea = section["MinArea"].to!string;
-        }
-
-        if(to!string(section).canFind("MaxArea"))
-        {
-            writeln("MaxArea: ", section["MaxArea"].to!string);
-            MaxArea = section["MaxArea"].to!string;
-        }
-    }
-
-    try
-    {
-        //Area Data would have QID = 100
-        string result_ = ("INSERT INTO otest.mytest (`MyDate`, `QID`, `MinArea`, `MaxArea`) VALUES (" ~"'" ~ datestamp ~ "', " ~ "100" ~ "," ~ MinArea ~ "," ~ MaxArea ~");");
-        db.stmt.executeUpdate(result_);
-    }
-
-    catch(Exception e) 
-    {
-        writeln("Can't insert MinArea and MaxArea");
-        writeln(e.msg);
-    }   
-
-    foreach (result; results)
-    {
-        //writeln(_key);
-        foreach(_k; result)
-        {
-            // _rk -- проверяем строку, но потом если в этой строке есть вхождение,
-            // то смотрим уже _k так как это JSON
-
-            string _rk = to!string(_k);
-            if (_rk.canFind("QID"))
-            {
-                try
-                {
-                    string result = ("INSERT INTO otest.mytest (`MyDate`, `QID`, `AID`) VALUES (" ~"'" ~ datestamp ~ "', " ~ to!string(_k["QID"]) ~ "," ~ to!string(_k["AID"]) ~ ");");
-                    db.stmt.executeUpdate(result);     
-                }
-
-                catch (Exception e)
-                {
-                    writeln("Can't insert in DB", e.msg);
-                }
-            }
-
-
-        }
-    }
-
-}
-
-//we need to get total number of QID that storage in DB
-int [] getNumberOfQID()
-{
-    // чтобы минимальная и максимальная площадь вставлялась в БД один раз мы ей идентификатор 100 присвоили, и выборку по нему
-    // лучше сделать потом 
-    auto rs = db.stmt.executeQuery("SELECT DISTINCT QID FROM otest.mytest WHERE QID != 100");
-    int [] result;
-    while (rs.next())
-    {
-        result ~= to!int(rs.getString(1));
-    }
-    //writeln("==> ", result);
-    return result;
-}
-
-void getQuestions(HTTPServerRequest req, HTTPServerResponse res)
-{
-    Json questions;
-    Json answer;
-
-    if(config.allow_voting_for_unauthorized == "true") // NOT authorized!
-    {
-       try
-       {
-        questions = req.json;
-        writeln("We got questions content!");
-        res.statusCode = 200;
-       }
-       catch (Exception e)
-       {
-        writeln("Can't parse incoming data as JSON");
-        writeln(e.msg);
-        writeln("------------------------------------------");
-       }
-    }
-
-
-    if(config.allow_voting_for_unauthorized != "true") // registered only
-    {
-        if (req.session)
-        {   
-           try
-           {
-            questions = req.json;
-            writeln("We got questions content!");
-            res.statusCode = 200;
-             res.writeVoidBody;
-           }
-           catch (Exception e)
-           {
-            writeln("Can't parse incoming data as JSON");
-            writeln(e.msg);
-            writeln("------------------------------------------");
-           }
-        }
-
-        else
-        {
-            res.statusCode = 401; // unauthorized!
-            writeln("User unauthorized and can't vote!");
-        }
-    }
-
-   res.writeJsonBody(answer);
-}
-
-
-
 void test(HTTPServerRequest req, HTTPServerResponse res)
 {
     if (req.session)
@@ -295,11 +169,9 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
     writeln(request);
     writeln("^-----------------------------------------------^");
     //readln;
-    try
-    {
-        string query_string = (`SELECT user, password FROM otest.myusers where user = ` ~ `'` ~ request["username"].to!string ~ `';`);
-        auto rs = db.stmt.executeQuery(query_string);
 
+    try
+    {      
         string dbpassword;
         string dbuser;
 
@@ -307,26 +179,6 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
         Json responseStatus = Json.emptyObject;
         Json responseBody = Json.emptyObject;  //should be _in_
        
-        //writeln("rs.next() --> ", rs.next());
-        /*
-        if(!rs.next()) // user do not exists in DB
-        {
-            responseBody["status"] = "userDoNotExists"; // user exists in DB, password NO
-            responseBody["isAuthorized"] = false;
-            logInfo("-------------------------------------------------------------------------------");
-            logInfo(responseBody.toString);
-            logInfo("-------------------------------------------------------------------------------");                              
-            logWarn("User: %s DO NOT exists in DB!", request["username"]); //getting username from request    
-        }   
-        writeln(query_string);      
-        */
-        // ISSUE: return false if DB have ONE element with same name!
-        if (rs.next()) //work only if user exists in DB
-        {
-            writeln("we are here");
-            dbuser = rs.getString(1);
-            dbpassword = rs.getString(2);    
-            
 
             if (dbuser == request["username"].to!string && dbpassword != request["password"].to!string)
             {
@@ -416,7 +268,7 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
             }
 
           
-        }
+       
 
         else // userDoNotExists
         {

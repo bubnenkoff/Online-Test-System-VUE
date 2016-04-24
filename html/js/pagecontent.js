@@ -54,12 +54,14 @@ var guestContent = Vue.extend({
    
   <div class="sendButton"> 
     <button v-on:click="postQuestionsContent()" :disabled="sendButtonDisable" type="button" class="btn btn-success">Отправить</button>
+    {{this.sendButtonDisable}}
   </div>
 
           `,
         data: function ()  {
           return {
-             questions: []
+             questions: [],
+             sendButtonDisable : "ddddddd"
           }
 
           },
