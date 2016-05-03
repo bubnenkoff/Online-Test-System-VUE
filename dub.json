@@ -6,6 +6,6 @@
 	"versions": ["VibeCustomMain"],
 	"dependencies": {
 		"vibe-d": "~>0.7.28",
-		"requests": "~>0.0.4"
+		"requests": "~>0.0.8"
 	}
 }

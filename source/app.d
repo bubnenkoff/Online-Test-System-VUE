@@ -86,22 +86,36 @@ AuthInfo _auth;
 
 void foo()
 {
-   writeln("!!!!!!!!!!");
-    string url = "http://localhost:8529/_db/testdb/_api/document/users/787145173283"; 
+   // List of documents in collection
+    string baseURL = "http://localhost:8529";
+    string url = "http://localhost:8529/_db/testdb/_api/document/?collection=users"; 
     import std.experimental.logger;
-    globalLogLevel(LogLevel.info);
-    auto rq = Request();
-    auto rs = rq.get(url);
-    writeln(rs.responseBody.data!string);
-    writeln(rs.code);
-    writeln("!!!!!!!!!!");
+    globalLogLevel(LogLevel.error);
+
+    Json mycollection = Json.emptyObject;
+  
+     auto rq = Request();
+     auto rs = rq.get(url);
+     //writeln(rs.responseBody.data!string);
+     mycollection = parseJsonString(rs.responseBody.data!string);
+     if (rs.code != 200)
+        writeln("Can't get list of documents in collection");
+
+     foreach(Json d;mycollection["documents"])
+     {
+       // writeln(baseURL ~ d);
+        auto rs = rq.get(baseURL ~ to!string(d).replace(`"`,``));
+        //writeln(rs.responseBody.data!string);
+     }
+
 
     /*
-    {
-    "login": "admin",
+{
+    "login": "dima",
+    "password": "123",
+    "type": "user",
     "firstname": "",
     "lastname": "",
-    "password": "123",
     "organization": "",
     "lastvisit": "",
     "tests" : 
