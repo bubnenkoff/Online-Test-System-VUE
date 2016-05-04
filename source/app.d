@@ -95,7 +95,7 @@ void getUsersFromDB()
    
    // List of documents in collection
     string baseURL = "http://localhost:8529";
-    string url = "http://localhost:8529/_db/onlinetest/_api/document/?collection=users"; 
+    string url = "http://localhost:8529/_db/otest/_api/document/?collection=users"; 
     import std.experimental.logger;
     globalLogLevel(LogLevel.error);
 
@@ -137,6 +137,7 @@ void getUsersFromDB()
 /*
 {
  USERS table: 
+{
     "login": "admin",
     "password": "123",
     "type": "user",
@@ -154,7 +155,7 @@ void getUsersFromDB()
 
 
 //same as string:
-//    {"login": "admin", "password": "123", "type": "admin", "firstname": "", "lastname": "", "organization": "", "lastvisit": "", "ip": "", "tests" : {"allowed": [], "passed": []} }
+//    db.users.save({"login":"admin","password":"123","type":"user","firstname":"","lastname":"","organization":"","lastvisit":"","ip":"","tests":{"allowed":[],"passed":[]}})
 
 //-----------------
 
@@ -231,7 +232,7 @@ void questions(HTTPServerRequest req, HTTPServerResponse res)
 void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
 {
     // req.peer - IP as string
-    string collectionUrl = "http://localhost:8529/_db/onlinetest/_api/document/?collection=visitors"; 
+    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; 
 }
 
 
@@ -239,7 +240,7 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
 void sendQuestionsToArangoDB(Json questions)
 {
     
-    string collectionUrl = "http://localhost:8529/_db/onlinetest/_api/document/?collection=sitetestanswers"; // вот сюда переслать запрос надо
+    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=sitetestanswers"; // вот сюда переслать запрос надо
 
 
     auto rq = Request();
