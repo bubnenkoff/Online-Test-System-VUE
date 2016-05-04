@@ -5,6 +5,8 @@ import std.algorithm;
 import std.datetime;
 import std.path;
 import std.file;
+import std.experimental.logger;
+
 
 import parseconfig;
 import dbconnect;
@@ -45,7 +47,7 @@ void main()
         return;
     }
 
-    foo();
+    getUsersFromDB();
 
     auto router = new URLRouter;
     router.get("/*", serveStaticFiles(roothtml ~ "\\"));    
@@ -58,6 +60,8 @@ void main()
     router.post("/logout", &logout);
 
     router.any("/test", &test);    
+
+    router.any("/questions", &questions);
 
     bool isAuthorizated = false;
     bool isAdmin = false;
@@ -84,11 +88,14 @@ void accControl(HTTPServerRequest req, HTTPServerResponse res)
 
 AuthInfo _auth;
 
-void foo()
+Tuple!(string, "login", string, "password") [] usersInDB;
+
+void getUsersFromDB()
 {
+   
    // List of documents in collection
     string baseURL = "http://localhost:8529";
-    string url = "http://localhost:8529/_db/testdb/_api/document/?collection=users"; 
+    string url = "http://localhost:8529/_db/onlinetest/_api/document/?collection=users"; 
     import std.experimental.logger;
     globalLogLevel(LogLevel.error);
 
@@ -100,31 +107,63 @@ void foo()
      mycollection = parseJsonString(rs.responseBody.data!string);
      if (rs.code != 200)
         writeln("Can't get list of documents in collection");
+     if (rs.code == 404)
+        writeln("URL do not exists: ", url);
 
+     string [] listOfDocumentsInUsers;   
+   
      foreach(Json d;mycollection["documents"])
      {
-       // writeln(baseURL ~ d);
-        auto rs = rq.get(baseURL ~ to!string(d).replace(`"`,``));
-        //writeln(rs.responseBody.data!string);
+        listOfDocumentsInUsers ~= baseURL ~ to!string(d).replace(`"`,``);
+
      }
 
 
-    /*
+     Tuple!(string, "login", string, "password") user;
+
+     Json userJson = Json.emptyObject;
+     auto rq1 = Request();
+     foreach(link; listOfDocumentsInUsers)
+     {
+        auto rs1 = rq1.get(link);
+        //userJson = parseJsonString(rs1.responseBody.data!string);
+        userJson = parseJsonString(rs1.responseBody.data!string);
+        user.login = to!string(userJson["login"]).replace(`"`,"");
+        user.password = to!string(userJson["password"]).replace(`"`,"");
+        usersInDB ~= user;
+     }
+
+
+/*
 {
-    "login": "dima",
+ USERS table: 
+    "login": "admin",
     "password": "123",
     "type": "user",
     "firstname": "",
     "lastname": "",
     "organization": "",
     "lastvisit": "",
+    "ip": "",
     "tests" : 
         {
             "allowed": [],
             "passed": []
         }
 }
-    */
+
+
+//same as string:
+//    {"login": "admin", "password": "123", "type": "admin", "firstname": "", "lastname": "", "organization": "", "lastvisit": "", "ip": "", "tests" : {"allowed": [], "passed": []} }
+
+//-----------------
+
+VISITORS table:
+db.visitors.save({"ip": "", "date": "", "cookie": "", "referal": "", "location": "", "language" : "", "browser" : "", "passedtests" : []})
+
+
+*/
+
 }
 
 
@@ -175,26 +214,79 @@ void test(HTTPServerRequest req, HTTPServerResponse res)
 }
 
 
+
+void questions(HTTPServerRequest req, HTTPServerResponse res)
+{
+    Json questions = req.json;
+    res.writeBody("Hello, World!", "text/plain");  // FIXME
+
+    sendVisitorInformationToArangoDB(req); // просто данные переслать сюда и вернуться
+
+    runTask(toDelegate(&sendVisitorInformationToArangoDB), req);
+    runTask(toDelegate(&sendQuestionsToArangoDB), questions);
+
+}
+
+
+void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
+{
+    // req.peer - IP as string
+    string collectionUrl = "http://localhost:8529/_db/onlinetest/_api/document/?collection=visitors"; 
+}
+
+
+
+void sendQuestionsToArangoDB(Json questions)
+{
+    
+    string collectionUrl = "http://localhost:8529/_db/onlinetest/_api/document/?collection=sitetestanswers"; // вот сюда переслать запрос надо
+
+
+    auto rq = Request();
+    rq.verbosity = 2;
+    string s = `{"test":"some value111"}`;
+    auto rs = rq.post(collectionUrl, to!string(questions), "application/json");
+    writeln(s);
+    writeln;
+    writeln(to!string(questions));
+    writeln("SENDED");
+
+
+}
+
+
+
+void onlinetestdata(HTTPServerRequest req, HTTPServerResponse res)
+{
+    if (req.session)
+        res.writeBody("request passed!", "text/plain");
+}
+
+
+
 void login(HTTPServerRequest req, HTTPServerResponse res)
 {
-    Json request = req.json;
+
+   Json request = req.json;
     //writeln(to!string(request["username"]));
     writeln("-------------JSON OBJECT from site:-------------");
     writeln(request);
     writeln("^-----------------------------------------------^");
     //readln;
 
+
     try
     {      
-        string dbpassword;
-        string dbuser;
 
         // response. responseBody should be nested in "success" or "fail" block. Like {"fail": {...}}
         Json responseStatus = Json.emptyObject;
         Json responseBody = Json.emptyObject;  //should be _in_
        
 
-            if (dbuser == request["username"].to!string && dbpassword != request["password"].to!string)
+        foreach(dbuser; usersInDB)
+        {
+
+            if (dbuser.login == request["username"].to!string && dbuser.password != request["password"].to!string)
             {
                 ////////USER OK PASSWORD WRONG///////////
                     responseStatus["status"] = "fail"; // user exists in DB, password NO
@@ -209,10 +301,10 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
             }
 
 
-            if (dbuser == request["username"].to!string && dbpassword == request["password"].to!string)
+            if (dbuser.login == request["username"].to!string && dbuser.password == request["password"].to!string)
             {
                 ////////ALL RIGHT///////////
-                 logInfo("DB-User: %s | DB-Password: %s", dbuser, dbpassword);
+                 logInfo("DB-User: %s | DB-Password: %s", dbuser.login, dbuser.password);
                  
                  if (!req.session) //if no session start one
                     {
@@ -224,7 +316,7 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                     _auth.user.username 
                    to get /checkAuthorization work! */
                 _auth.isAuthorized = true; 
-                if(dbuser == "admin") // admin name hardcoded
+                if(dbuser.login == "admin") // admin name hardcoded
                 {
                 try
                   {
@@ -236,13 +328,13 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                        responseStatus["status"] = "success";
                        responseBody["isAuthorized"] = true;
                        responseBody["isAdmin"] = true;
-                       responseBody["username"] = dbuser; // admin!
+                       responseBody["username"] = dbuser.login; // admin!
                        responseStatus["login"] = responseBody;
 
                        logInfo("-------------------------------------------------------------------------------");
                        logInfo(responseStatus.toString); // include responseBody
                        logInfo("^-----------------------------------------------------------------------------^");
-                       logInfo("Admin session for user: %s started", dbuser);
+                       logInfo("Admin session for user: %s started", dbuser.login);
                        // {"login":{"isAuthorized":true,"isAdmin":true,"username":"admin"},"status":"success"}
                     }
 
@@ -252,23 +344,23 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                         writeln(e.msg);
                     }
                 }
-                if(dbuser != "admin") // start user session
+                if(dbuser.login != "admin") // start user session
                 {
                     try
                     {
-                       req.session.set("username", dbuser); //set current username in parameter of session name
-                        _auth.user.username = dbuser; //set field
+                       req.session.set("username", dbuser.login); //set current username in parameter of session name
+                        _auth.user.username = dbuser.login; //set field
 
                        responseStatus["status"] = "success";
                        responseBody["isAuthorized"] = true;
                        responseBody["isAdmin"] = false;
-                       responseBody["username"] = dbuser; // user!
+                       responseBody["username"] = dbuser.login; // user!
                        responseStatus["login"] = responseBody;
 
                        logInfo("-------------------------------------------------------------------------------");
                        logInfo(responseStatus.toString); // include responseBody
                        logInfo("^-----------------------------------------------------------------------------^");
-                       logInfo("User session for user: %s started", dbuser);
+                       logInfo("User session for user: %s started", dbuser.login);
                    // {"login":{"isAuthorized":true,"isAdmin":false,"username":"test"},"status":"success"}
                     }
 
@@ -280,25 +372,26 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                 }
  
             }
-
+      
           
        
 
-        else // userDoNotExists
-        {
-            logInfo("User: %s do not exists in DB", dbuser);
-            responseStatus["status"] = "fail"; // user exists in DB, password NO
-            responseBody["username"] = "userDoNotExists"; // user exists in DB, password NO
-            responseBody["isAuthorized"] = false;
-            responseStatus["login"] = responseBody;
-            logInfo("-------------------------------------------------------------------------------");
-            logInfo(responseStatus.toString); // include responseBody
-            logInfo("^-----------------------------------------------------------------------------^");                              
-            logWarn("User %s DO NOT exist in DB", request["username"]); //getting username from request
+            else // userDoNotExists
+            {
+                logInfo("User: %s do not exists in DB", dbuser.login);
+                responseStatus["status"] = "fail"; // user exists in DB, password NO
+                responseBody["username"] = "userDoNotExists"; // user exists in DB, password NO
+                responseBody["isAuthorized"] = false;
+                responseStatus["login"] = responseBody;
+                logInfo("-------------------------------------------------------------------------------");
+                logInfo(responseStatus.toString); // include responseBody
+                logInfo("^-----------------------------------------------------------------------------^");                              
+                logWarn("User %s DO NOT exist in DB", request["username"]); //getting username from request
 
+            }
+
+            res.writeJsonBody(responseStatus); //Final answer to server. Must be at the end
         }
-
-        res.writeJsonBody(responseStatus); //Final answer to server. Must be at the end
 
     }
 

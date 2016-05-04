@@ -61,7 +61,7 @@ var guestContent = Vue.extend({
         data: function ()  {
           return {
              questions: [],
-             sendButtonDisable : "ddddddd"
+             sendButtonDisable : false
           }
 
           },

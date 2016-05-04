@@ -1,14 +1,13 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"ddbc": "0.2.25",
-		"libevent": "2.0.1+2.0.16",
-		"libev": "5.0.0+4.04",
-		"requests": "0.0.8",
-		"openssl": "1.1.4+1.0.1g",
-		"memutils": "0.4.5",
-		"vibe-d": "0.7.28",
 		"libasync": "0.7.9",
-		"mysql-native": "0.1.4"
+		"libev": "5.0.0+4.04",
+		"libevent": "2.0.1+2.0.16",
+		"memutils": "0.4.5",
+		"mysql-native": "0.1.4",
+		"openssl": "1.1.4+1.0.1g",
+		"requests": "0.1.0",
+		"vibe-d": "0.7.29-beta.1"
 	}
 }
