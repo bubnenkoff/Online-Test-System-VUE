@@ -230,18 +230,21 @@ void questions(HTTPServerRequest req, HTTPServerResponse res)
     Json questions = req.json;
     res.writeBody("Hello, World!", "text/plain");  // FIXME
 
-    sendVisitorInformationToArangoDB(req); // просто данные переслать сюда и вернуться
-
-    runTask(toDelegate(&sendVisitorInformationToArangoDB), req);
-    runTask(toDelegate(&sendQuestionsToArangoDB), questions);
+    runTask(toDelegate(&sendVisitorInformationToArangoDB), req); // для каждого кто нажал кнопку отправить сохраняем всю инфу, чтобы потом не показывать пройденный тест
+    runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
 
 }
 
 
 void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
 {
+    writeln("------------------------");
     // req.peer - IP as string
-    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; 
+    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; // info about passed test for everoone who press
+
+    Json questions = req.json;
+    writeln(questions["testname"]);
+    writeln("------------------------");
 }
 
 
@@ -253,12 +256,7 @@ void sendQuestionsToArangoDB(Json questions)
 
     auto rq = Request();
     rq.verbosity = 2;
-
-    Json test = Json.emptyObject;
-     string s1 = to!string(questions);
-     test = parseJsonString(s1);
-
-    string s = `{"sf":"ddd"}'`;
+    writeln("!!!!!!");
     auto rs = rq.post(collectionUrl, `{"question":` ~ to!string(questions) ~ `}`, "application/json"); // просто массив пулять нелья
     writeln("SENDED");
 

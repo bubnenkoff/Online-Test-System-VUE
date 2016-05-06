@@ -100,10 +100,10 @@ var guestContent = Vue.extend({
 
              postQuestionsContent : function()
              {
-                var sendButtonDisable = false; // send Button is active
+                this.sendButtonDisable = true;
                 this.$http.post('http://127.0.0.1:8080/questions', JSON.stringify(this.questions)).then(function(response)
                 {
-                   console.log("Server response1: ", response.status);
+                   console.log("Server response: ", response.status);
                    this.sendButtonDisable = true;
 
                 }, function(response)
