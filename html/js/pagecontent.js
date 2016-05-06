@@ -54,7 +54,7 @@ var guestContent = Vue.extend({
    
   <div class="sendButton"> 
     <button v-on:click="postQuestionsContent()" :disabled="sendButtonDisable" type="button" class="btn btn-success">Отправить</button>
-    {{this.sendButtonDisable}}
+    {{sendButtonDisable}}
   </div>
 
           `,
@@ -103,8 +103,8 @@ var guestContent = Vue.extend({
                 var sendButtonDisable = false; // send Button is active
                 this.$http.post('http://127.0.0.1:8080/questions', JSON.stringify(this.questions)).then(function(response)
                 {
-                   console.log("Server response: ", response.status);
-                   sendButtonDisable = true;
+                   console.log("Server response1: ", response.status);
+                   this.sendButtonDisable = true;
 
                 }, function(response)
                   {

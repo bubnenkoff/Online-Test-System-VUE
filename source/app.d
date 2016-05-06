@@ -93,17 +93,20 @@ Tuple!(string, "login", string, "password") [] usersInDB;
 void getUsersFromDB()
 {
    
+try
+{
    // List of documents in collection
     string baseURL = "http://localhost:8529";
     string url = "http://localhost:8529/_db/otest/_api/document/?collection=users"; 
     import std.experimental.logger;
     globalLogLevel(LogLevel.error);
 
+
     Json mycollection = Json.emptyObject;
   
      auto rq = Request();
      auto rs = rq.get(url);
-     //writeln(rs.responseBody.data!string);
+     writeln(rs.responseBody.data!string);
      mycollection = parseJsonString(rs.responseBody.data!string);
      if (rs.code != 200)
         writeln("Can't get list of documents in collection");
@@ -132,7 +135,13 @@ void getUsersFromDB()
         user.password = to!string(userJson["password"]).replace(`"`,"");
         usersInDB ~= user;
      }
+}
 
+    catch (Exception e)
+    {
+        writeln(e.msg);
+        writeln("Can't connect to ArangoDB");
+    }
 
 /*
 {
@@ -242,16 +251,16 @@ void sendQuestionsToArangoDB(Json questions)
     
     string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=sitetestanswers"; // вот сюда переслать запрос надо
 
-
     auto rq = Request();
     rq.verbosity = 2;
-    string s = `{"test":"some value111"}`;
-    auto rs = rq.post(collectionUrl, to!string(questions), "application/json");
-    writeln(s);
-    writeln;
-    writeln(to!string(questions));
-    writeln("SENDED");
 
+    Json test = Json.emptyObject;
+     string s1 = to!string(questions);
+     test = parseJsonString(s1);
+
+    string s = `{"sf":"ddd"}'`;
+    auto rs = rq.post(collectionUrl, `{"question":` ~ to!string(questions) ~ `}`, "application/json"); // просто массив пулять нелья
+    writeln("SENDED");
 
 }
 
