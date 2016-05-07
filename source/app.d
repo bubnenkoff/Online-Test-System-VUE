@@ -32,6 +32,8 @@ static this()
 
 Config config;
 
+string baseURL = "http://localhost:8529";
+
 void main()
 {
     config = new Config();
@@ -96,7 +98,6 @@ void getUsersFromDB()
 try
 {
    // List of documents in collection
-    string baseURL = "http://localhost:8529";
     string url = "http://localhost:8529/_db/otest/_api/document/?collection=users"; 
     import std.experimental.logger;
     globalLogLevel(LogLevel.error);
@@ -231,34 +232,153 @@ void questions(HTTPServerRequest req, HTTPServerResponse res)
     res.writeBody("Hello, World!", "text/plain");  // FIXME
 
     runTask(toDelegate(&sendVisitorInformationToArangoDB), req); // для каждого кто нажал кнопку отправить сохраняем всю инфу, чтобы потом не показывать пройденный тест
-    runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
+  //  runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
 
 }
 
 
 void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
 {
-    writeln("------------------------");
+    writeln("sendVisitorInformationToArangoDB function");
+    // {"ip": "", "date": "", "cookie": "", "referal": "", "location": "", "language" : "", "browser" : "", "passedtests" : []}
     // req.peer - IP as string
-    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; // info about passed test for everoone who press
 
-    Json questions = req.json;
-    writeln(questions["testname"]);
-    writeln("------------------------");
+    // Перед тем добавлять данные можно попробовать в начале получить список ИП, чтобы потом для данного ИП обновить тесты которые он прошел
+    // Можно без этого, но чисто теоретически статистика будет чуть удобнее
+    
+    string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; // info about passed test for everyone who press
+    
+    import std.uuid; 
+
+    struct VisitorData
+    {
+        string guid;
+        string ip;
+        string date;
+        string cookie;
+        string referal;
+        string location;
+        string language;
+        string browser;
+        string [] passedtests; // В БД хранится массив тестов для каждого ИП адреса. 
+    }
+
+    VisitorData visitordata;
+
+
+    visitordata.guid = to!string(randomUUID()); 
+    visitordata.ip = req.peer;
+
+    // Из прилетевшего Question нужно взять еще взять имя пройденного теста и заполнить VisitorData
+
+       Json request = req.json;
+    //  writeln(to!string(request["testname"])); // не работает. нужно указать что именно выводить в []
+       writeln("111111111111111111");
+
+       string passedtestFromCurrentQuestion; // пройденный тест из текущего JSON. В БД у нас массив тестов
+
+       foreach(Json x; request)
+       {
+         passedtestFromCurrentQuestion = to!string(x["testname"]).replace(`"`,``);  // из запроса получаем имя теста из пришедшего Question. Потом имя этого теста нужно отправить в Визиторс
+       }
+
+        string query = `{"query" : "FOR v in visitors return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;  // делаем выборку гуидов и IP из коллекции
+        string aqlUrl = "http://localhost:8529/_db/otest/_api/cursor";
+        auto rq2 = Request();
+        auto rs2 = rq2.post(aqlUrl, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
+        
+        writeln(rs2.responseBody.data!string);
+        writeln("^^^^^^^^^^");
+
+        Json visitorsInfo = Json.emptyObject;
+        visitorsInfo = parseJsonString(rs2.responseBody.data!string);
+        writeln(visitorsInfo["result"]);
+
+        foreach(Json v;visitorsInfo["result"])
+        {
+           if (to!string(v["ip"]).canFind(visitordata.ip)) // среди тестов уже есть данный ИП то нам нужно получить его гуид и обновить для него список пройденных тестов
+           {
+                writeln(to!string(v["passedtests"]));
+                writeln(v["guid"]);
+                writeln("passedtestFromCurrentQuestion: ", passedtestFromCurrentQuestion);
+                writeln("______________________________________________");
+                //readln;
+
+                // тут патчим пройденные тесты! к текущему значению passedtests прибавляем значение passedtestFromCurrentQuestion полученное выше
+                // FIXME to!string тут возможно не идеальное, но рабочее решение, иначе массив JSON не получается перебрать
+                // replace заменит ПОЛНОСТЬЮ документ поэтому нам нужен UPDATE
+                if( canFind(to!string(v["passedtests"]), passedtestFromCurrentQuestion))
+                {
+                    // если данный тест уже значится как пройденный
+                    writeln("test already passed");
+                    //readln;
+                }
+
+                else
+                {
+                    // Создаем массив тестов с пройденными тестами из БД для данного пользователя
+                    // FIXME Почему то по нормальному не прибавляет, поэтому HACK
+                   // visitordata.passedtests ~= (v["passedtests"]).toString ~ `,` ~ passedtestFromCurrentQuestion;
+                        visitordata.passedtests ~= (v["passedtests"]).toString; 
+                        visitordata.passedtests ~= passedtestFromCurrentQuestion;
+                    
+                    string result_test = (v["passedtests"]).toString.replace(`]"`, `, `).replace(`]"`, `, `).replace(`"[`, `[`) ~ passedtestFromCurrentQuestion ~ `]`;
+                    // И добавляем в него passedtestFromCurrentQuestion полученный из текущего запроса
+                   // visitordata.passedtests ~= passedtestFromCurrentQuestion;
+
+                    writeln("Next test will be added");
+                    writeln(to!string(v["passedtests"]));
+                    writeln();
+                    writeln("+++++++++++++++++++++");
+                    // патчим элементы в коллекции. Можно патчить по ИП
+                    writeln("--> ", result_test);//replace(`"`,``));
+                   // auto x = visitordata.passedtests.map!(x => ""x.writeln);
+
+                    string queryUpdate = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ visitordata.ip ~ `' UPDATE v WITH {passedtests: '` ~ result_test ~ `'} IN visitors"}`; 
+                    writeln(queryUpdate);
+                    readln;
+            
+                    auto rq3 = Request();
+                    auto rs3 = rq3.post(aqlUrl, queryUpdate , "application/json"); // тут у нас не [] а {} поэтому можно без key
+                    writeln("DONE!!!!!!!!!!");
+
+                }
+           }
+        }
+
+
+
+        //Json mycollection = rs2.responseBody.data!readJson;
+        //writeln(to!string(mycollection["result"]));
+
+
+
+
+    ///////
+
+    string myjson = serializeToJsonString(visitordata);
+    //Json visitordataJson = serializeToJson(myjson);
+
+    
+    auto rq = Request();
+    auto rs = rq.post(collectionUrl, myjson , "application/json"); // тут у нас не [] а {} поэтому можно без key
+    writeln("VISITORS INFO SENDED!");
+
 }
 
 
 
-void sendQuestionsToArangoDB(Json questions)
+void sendQuestionsToArangoDB(Json questions) // само тело вопроса
 {
     
     string collectionUrl = "http://localhost:8529/_db/otest/_api/document/?collection=sitetestanswers"; // вот сюда переслать запрос надо
 
     auto rq = Request();
     rq.verbosity = 2;
-    writeln("!!!!!!");
     auto rs = rq.post(collectionUrl, `{"question":` ~ to!string(questions) ~ `}`, "application/json"); // просто массив пулять нелья
-    writeln("SENDED");
+    writeln("Question JSON was send to DB");
+
+    writeln(questions);
 
 }
 
