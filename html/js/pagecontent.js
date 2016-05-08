@@ -68,7 +68,7 @@ var guestContent = Vue.extend({
           ready() 
           { 
             this.getQuestionsContent()
-            checkAuth()
+            //checkAuth()
 
           },
 
@@ -141,13 +141,14 @@ var guestContent = Vue.extend({
               {
                    console.log("calc user info");
                    console.log(this.questions);
-                  // checkAuth();
+                  
                   for (var question of this.questions)
                   {
       
                     if (question.username)
                     {
                        console.log("Logined user: ", question.username);
+                       console.log("Logined user: ", App.username);
                     }
 
                   }
