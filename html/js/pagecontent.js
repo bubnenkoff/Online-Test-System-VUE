@@ -147,7 +147,7 @@ var guestContent = Vue.extend({
       
                     if (question.username)
                     {
-                       console.log("Logined user: ", question.username);
+                       console.log("(question.username) Logined user: ", question.username);
                        console.log("Logined user: ", App.username);
                     }
 
