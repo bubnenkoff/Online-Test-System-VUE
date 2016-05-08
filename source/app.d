@@ -33,6 +33,7 @@ static this()
 Config config;
 
 string baseURL = "http://localhost:8529";
+string collectionVisitorsUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; // info about passed test for everyone who press
 
 void main()
 {
@@ -209,8 +210,33 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
     // Login info we should check only with /login here
     else
     {
+        // checkAuthorization запрашивается при каждом обращении к сайту
+        // для неавторизованных пользователетей нужно проверять в коллекции visitors какие тесты были пройдены
+
+        
+        //string query = `{"query" : "FOR v in visitors return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
+        //auto rq = Request();
+        //auto rs = rq.post(collectionVisitorsUrl, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
+
+
+        //Json visitorsInfo = Json.emptyObject;
+        //visitorsInfo = parseJsonString(rs.responseBody.data!string);
+
+        //  foreach(Json v;visitorsInfo["result"])
+        //  {
+        //       if (to!string(v["ip"]).canFind(req.peer)) // среди тестов уже есть данный ИП то нам нужно получить список вопросов на которые он ответил
+        //       {
+        //           writeln(to!string(v["passedtests"]));
+        //           writeln("**************************");
+        //       }
+        //  }
+        
+        //writeln(rs.responseBody.data!string);
+        
+
         responseStatus["status"] = "fail"; // unauthorized user
         res.writeJsonBody(responseStatus);
+
     }
     logInfo("-----checkAuthorization END-------");
 
@@ -328,15 +354,14 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
 
                     writeln("Next test will be added");
                     writeln(to!string(v["passedtests"]));
-                    writeln();
-                    writeln("+++++++++++++++++++++");
-                    // патчим элементы в коллекции. Можно патчить по ИП
+
+                    // Записываем в коллекцию тест который был пройден с данного IP чтобы больше его не показывать
                     writeln("--> ", result_test);//replace(`"`,``));
                    // auto x = visitordata.passedtests.map!(x => ""x.writeln);
 
                     string queryUpdate = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ visitordata.ip ~ `' UPDATE v WITH {passedtests: '` ~ result_test ~ `'} IN visitors"}`; 
-                    writeln(queryUpdate);
-                    readln;
+                    //writeln(queryUpdate);
+                    //readln;
             
                     auto rq3 = Request();
                     auto rs3 = rq3.post(aqlUrl, queryUpdate , "application/json"); // тут у нас не [] а {} поэтому можно без key

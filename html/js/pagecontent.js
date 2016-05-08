@@ -68,6 +68,8 @@ var guestContent = Vue.extend({
           ready() 
           { 
             this.getQuestionsContent()
+            checkAuth()
+
           },
 
           watch: 
@@ -119,18 +121,39 @@ var guestContent = Vue.extend({
 
               calculateIsSelectedAnswers : function() 
               {                
+               // console.log(App.username); // имя полученное в переменную username: "",
                 for (var question of this.questions)
                 { 
+
                    if(question.question) // small hack to process only questions. We also have {user: name}
                    {
                     this.processOneQuestion(question);
                    }
-
-                   if(question.username) // it's user info field. We should put user name to JSON 
+                   else // походу если нет элемента question то это данные о юзере
                    {
-                    question.username = App.username; // from Global Vue instance
+                    this.calculateUserInfo(question);
                    }
+
                 }
+              },
+
+              calculateUserInfo : function(question) 
+              {
+                   console.log("calc user info");
+                   console.log(this.questions);
+                  // checkAuth();
+                  for (var question of this.questions)
+                  {
+      
+                    if (question.username)
+                    {
+                       console.log("Logined user: ", question.username);
+                    }
+
+                  }
+                  
+                   
+                //  
               },
 
 

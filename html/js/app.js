@@ -99,7 +99,16 @@ App = new Vue ({ // App -- is need for overwrite global var. Global var need dec
       // "sendButtonDisable": false
 
     }
-  })
+  //   ,
+  // ready: function()
+  // {
+  //   checkAuth(); // при каждом обращении к странице проверяем статус авторизации
+  // }
+
+  }
+
+
+  )
 
 
 
