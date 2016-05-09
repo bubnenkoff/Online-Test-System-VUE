@@ -100,14 +100,14 @@ App = new Vue ({ // App -- is need for overwrite global var. Global var need dec
       contentView: "guestcontent",
       username: "",
       password: "",
+      passedtests: [],
       // "sendButtonDisable": false
 
-    }
-    ,
+    },
+
   ready: function()
   {
-   // checkAuth(); // при каждом обращении к странице проверяем статус авторизации
-
+    checkAuth.call(this) //binding with stand-alone function placed in authorization.js. Without binding _checkAuth_ will not see _data_
   }
 
   }
