@@ -92,12 +92,25 @@ var guestContent = Vue.extend({
                 this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
+
+                    for (var question of response.data)
+                    { 
+                       if(question.username) // small hack to process only questions. We also have {user: name}
+                       {
+                          App.currenttestName = question.username;
+                       }
+                   }
+
                 }, function(response)
                 {
                   console.log("Can't get questions.json from server");
                   console.log("Server response: ", response.status);
                 }
+
+                
+
                 ); 
+
               },
 
              postQuestionsContent : function()

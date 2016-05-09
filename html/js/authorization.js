@@ -65,7 +65,6 @@ function checkAuth()
 	// all filds are empty and we need to ask server if he have authorize session
 
   console.log("Checking if user already have active session"); 
-  console.log(this.passedtests); 
 
 	this.$http.post('http://127.0.0.1:8080/checkAuthorization').then(function (response) {
 	     console.log("server response: ", response.data)
@@ -98,6 +97,12 @@ function checkAuth()
 	  	this.passedtests = response.data.passedtests; // fill paased tests in App
 	   console.log("This user already passed next tests:");
 	   console.log(this.passedtests);
+
+
+     if(App.passedtests.includes(App.currenttestName)) // check if test from DB for this IP eq current test name for this json set flag
+     {
+      App.testPassed = true; // set App to true. This test is passed
+     }
 
 
 	    },
