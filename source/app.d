@@ -202,6 +202,21 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
                 responseBody["isAdmin"] = true;
             }
 
+            // 
+            string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
+            auto rq = Request();
+            auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
+        
+            Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
+            visitorsInfo = parseJsonString(rs.responseBody.data!string);
+
+            // filling passed tests for this IP
+            //incoming JSON is:
+            // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
+            // result is array, so [0] it's first element
+            Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
+            responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client
+
             res.writeJsonBody(responseStatus);
             logInfo(responseStatus.toString); // include responseBody
         }
@@ -212,33 +227,26 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
     else
     {
         // checkAuthorization запрашивается при каждом обращении к сайту
-        // для неавторизованных пользователетей нужно проверять в коллекции visitors какие тесты были пройдены
-
-        
-        string query = `{"query" : "FOR v in visitors return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
+        // для неавторизованных пользователей нужно проверять в коллекции visitors какие тесты были пройдены
+        string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
         auto rq = Request();
         auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
-        writeln("post sended");
-
-        Json visitorsInfo = Json.emptyObject;
+    
+        Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
         visitorsInfo = parseJsonString(rs.responseBody.data!string);
-        writeln("+++++++++++++++");
-        writeln(to!string(visitorsInfo));
 
-          foreach(Json v;visitorsInfo["result"])
-          {
-               if (to!string(v["ip"]).canFind(req.peer)) // среди тестов уже есть данный ИП то нам нужно получить список вопросов на которые он ответил
-               {
-                   writeln(to!string(v["passedtests"]));
-                   writeln("**************************");
-               }
-          }
-        
-        //writeln(rs.responseBody.data!string);
-
+        // filling passed tests for this IP
+        //incoming JSON is:
+        // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
+        // result is array, so [0] it's first element
+        Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
+        responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client
 
         responseStatus["status"] = "fail"; // unauthorized user
+        writeln(responseStatus);
         res.writeJsonBody(responseStatus);
+
+        // {"passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8,firsttest9]","status":"fail"}
 
     }
     logInfo("-----checkAuthorization END-------");
@@ -320,13 +328,11 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
         visitorsInfo = parseJsonString(rs2.responseBody.data!string);
         //writeln(visitorsInfo["result"]);
         writeln(visitorsInfo);
-        writeln("00000000000");
         
 
         // foreach не будет работать если это первое обращение с данного ИП и в БД по нему пусто
         if(visitorsInfo["result"].toString == "[]")
         {
-            writeln("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             writeln(visitorsInfo["result"]);
 
             visitordata.passedtests ~= passedtestFromCurrentQuestion;
@@ -335,8 +341,6 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
             Json myJson = visitordata.serializeToJson();
 
             string qy = myJson.toString;
-            writeln(qy);
-            //readln;
 
             import std.net.curl;
             auto content = post("http://localhost:8529/_db/otest/_api/document?collection=visitors", qy);
@@ -348,11 +352,10 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
         {
            if (to!string(v["ip"]).canFind(visitordata.ip)) // среди тестов уже есть данный ИП то нам нужно получить его гуид и обновить для него список пройденных тестов
            {
-                //writeln(to!string(v["passedtests"]));
+                writeln(to!string(v["passedtests"]));
                 //writeln(v["guid"]);
                 //writeln("passedtestFromCurrentQuestion: ", passedtestFromCurrentQuestion);
                 //writeln("______________________________________________");
-                //readln;
 
                 // тут патчим пройденные тесты! к текущему значению passedtests прибавляем значение passedtestFromCurrentQuestion полученное выше
                 // FIXME to!string тут возможно не идеальное, но рабочее решение, иначе массив JSON не получается перебрать
@@ -376,31 +379,21 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
                             visitordata.passedtests ~= passedtestFromCurrentQuestion;    
                         }
                         
-                    
-                    //string xxx = v["passedtests"].get!string;
-                    //writeln(xxx);
-                    //writeln("--------------");
-                    //readln;
-
-                    //string result_test = (v["passedtests"]).toString.replace(`[]`,`[`).replace(`]"`, `, `).replace(`]"`, `, `).replace(`"[`, `[`).replace(`[[","`,`[`).replace(`"]`,`]`) ~ passedtestFromCurrentQuestion ~ `]`;
-                    // И добавляем в него passedtestFromCurrentQuestion полученный из текущего запроса
-                   // visitordata.passedtests ~= passedtestFromCurrentQuestion;
                    string result_test;
 
                    // таким извращенным образом заполняем массив ответов. потому что массив [] и Json объект [] это не тоже самое
                    if(to!string(v["passedtests"]) == `[]`)
                    {
                         result_test = `[` ~ passedtestFromCurrentQuestion ~`]`;
-                        //writeln("result_test1: ", result_test);
-                        //readln;
+        
                    }
 
                    if(to!string(v["passedtests"]) != `[]`)
                    {
-                        result_test = to!string(v["passedtests"]).replace(`]`, `,` ~ passedtestFromCurrentQuestion ~ `]`);
+                       result_test = to!string(v["passedtests"]).replace(`]`, `,` ~ passedtestFromCurrentQuestion ~ `]`);
                    }
 
-                    result_test = result_test.replace(`"`,``).replace(`[]`,`""`).replace(`[,`,``).replace(`],`,`,`).replace(`[\`,``).replace(`\`,``);
+                    result_test = result_test.replace(`"`,``);
 
                    
                    writeln(result_test);

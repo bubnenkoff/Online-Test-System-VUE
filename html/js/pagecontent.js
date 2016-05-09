@@ -124,8 +124,11 @@ var guestContent = Vue.extend({
                // console.log(App.username); // имя полученное в переменную username: "",
                 for (var question of this.questions)
                 { 
-
-                   if(question.question) // small hack to process only questions. We also have {user: name}
+                  if(question.isSlider)
+                  {
+                    console.log("!!!!!!!");
+                  }
+                   if(question.question && !question.isSlider) // small hack to process only questions. We also have {user: name}
                    {
                     this.processOneQuestion(question);
                    }
