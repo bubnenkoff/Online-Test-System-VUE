@@ -102,6 +102,7 @@ function checkAuth()
      if(App.passedtests.includes(App.currenttestName)) // check if test from DB for this IP eq current test name for this json set flag
      {
       App.testPassed = true; // set App to true. This test is passed
+      App.contentView = 'endPage'; // change view of main page if test already passed
      }
 
 

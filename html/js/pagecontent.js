@@ -231,3 +231,9 @@ var adminContent = Vue.extend({
               <p>ADMIN CONTENT TEST</p>
           `
         });
+
+var endPage = Vue.extend({
+      template: `
+              <p>Thanks but this test already passed!</p>
+          `
+        });

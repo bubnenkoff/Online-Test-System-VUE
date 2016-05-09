@@ -36,7 +36,7 @@
 										 "isSelected" : false,
 										 "isDisabled" : false,
 										 "isTextBox" : true,
-										 "userTextInputValue" : "ddddddddd"
+										 "userTextInputValue" : ""
 									}
 								 ],
 						"MaxAllowedChoice" : 3,

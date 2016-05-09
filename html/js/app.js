@@ -90,6 +90,8 @@ Vue.component('guestcontent', guestContent);
 Vue.component('usercontent', userContent);
 Vue.component('admincontent', adminContent);
 
+Vue.component('endPage', endPage);
+
 
 App = new Vue ({ // App -- is need for overwrite global var. Global var need declarated abobe all function, because some it's function is calling from outside
    el: '#app',
