@@ -25,7 +25,11 @@ var GuestMenu = Vue.extend({
           sendLoginInfo : sendLoginInfo, // key (anyname) | value -> calling function name (from separate file) 
           //calling without brackets because we do need return from function, we need just function
 
-          checkAuth : checkAuth // restore authorization after refresh page if user already have session!
+          checkAuth: checkAuth // restore authorization after refresh page if user already have session!
+        },
+        ready()
+        {
+           this.checkAuth()
         }
 
           });
