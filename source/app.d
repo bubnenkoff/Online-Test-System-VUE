@@ -223,7 +223,7 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
     //example: {"login":{"isAuthorized":true,"isAdmin":false,"username":"test"},"status":"success"}
 
     }
-    // Login info we should check only with /login here
+    // Login info we should check only with /login
     else
     {
         // checkAuthorization запрашивается при каждом обращении к сайту
