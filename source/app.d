@@ -289,13 +289,13 @@ void questions(HTTPServerRequest req, HTTPServerResponse res)
     Json questions = req.json;
     res.writeBody("Hello, World!", "text/plain");  // FIXME
 
-    runTask(toDelegate(&sendVisitorInformationToArangoDB), req); // для каждого кто нажал кнопку отправить сохраняем всю инфу, чтобы потом не показывать пройденный тест
+    runTask(toDelegate(&sendVisitorInformationToArangoDB), req, res); // для каждого кто нажал кнопку отправить сохраняем всю инфу, чтобы потом не показывать пройденный тест
     runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
 
 }
 
 
-void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
+void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse res)  // только для тех кто прошел тест по идее. Нужно убедиться что только их инфа будет храниться
 {
     writeln("sendVisitorInformationToArangoDB function");
     // {"ip": "", "date": "", "cookie": "", "referal": "", "location": "", "language" : "", "browser" : "", "passedtests" : []}
@@ -402,14 +402,14 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
                         
                    string result_test;
 
-                   // таким извращенным образом заполняем массив ответов. потому что массив [] и Json объект [] это не тоже самое
-                   if(to!string(v["passedtests"]) == `[]`)
+                   
+                   if(v["passedtests"] == Json.emptyArray) // []
                    {
                         result_test = `[` ~ passedtestFromCurrentQuestion ~`]`;
         
                    }
 
-                   if(to!string(v["passedtests"]) != `[]`)
+                   if(v["passedtests"] != Json.emptyArray)
                    {
                        result_test = to!string(v["passedtests"]).replace(`]`, `,` ~ passedtestFromCurrentQuestion ~ `]`);
                    }
@@ -438,9 +438,7 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
                     // очищаем строку
                     result_test = [];
 
-                    // FIXME очень странный баг. Если без curl отправлять, то вставляется криво. Массивы ответов накладываются
-                    //auto rq3 = Request();
-                    //auto rs3 = rq3.post(aqlUrl, queryUpdate); // тут у нас не [] а {} поэтому можно без key
+                   res.writeJsonBody(Json.emptyArray);
                     writeln("DONE!!!!!!!!!!");
 
                 }

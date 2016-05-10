@@ -98,13 +98,15 @@ function checkAuth()
 	   console.log("This user already passed next tests:");
 	   console.log(App.passedtests);
 
-console.log("111111111000000000000");
-console.log(this.currenttestName);
-console.log("_____________________________");
-     if(App.passedtests.includes(this.currenttestName)) // check if test from DB for this IP eq current test name for this json set flag
+
+	console.log(this.currenttestName);
+	console.log("_____________________________");
+     if(App.passedtests.includes(this.currenttestName) && App.passedtests != `[]`) // check if test from DB for this IP eq current test name for this json set flag //HACK FIXME
      {
       App.testPassed = true; // set App to true. This test is passed
       App.contentView = 'endPage'; // change view of main page if test already passed
+      console.log("11111ffffffffffffff");
+
 
      }
 
