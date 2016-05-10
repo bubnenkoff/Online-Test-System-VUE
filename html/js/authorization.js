@@ -85,7 +85,7 @@ function checkAuth()
 	          console.log("We are already authorized on site as user (F5 even accure)");
 	          App.topMenuView = 'usermenu' //Change current view!
 	          App.contentView = 'usercontent';
-	          this.username = response.data.login.username; // get user name from response and set it to {{username}}
+	          App.username = response.data.login.username; // get user name from response and set it to {{username}}
 	        }
 	     }
 
@@ -94,15 +94,18 @@ function checkAuth()
 	     console.log("User do not Authorizated!");
 	   } 
 
-	  	this.passedtests = response.data.passedtests; // fill paased tests in App
+	  	App.passedtests = response.data.passedtests; // fill paased tests in App
 	   console.log("This user already passed next tests:");
-	   console.log(this.passedtests);
+	   console.log(App.passedtests);
 
-
-     if(App.passedtests.includes(App.currenttestName)) // check if test from DB for this IP eq current test name for this json set flag
+console.log("111111111000000000000");
+console.log(this.currenttestName);
+console.log("_____________________________");
+     if(App.passedtests.includes(this.currenttestName)) // check if test from DB for this IP eq current test name for this json set flag
      {
       App.testPassed = true; // set App to true. This test is passed
       App.contentView = 'endPage'; // change view of main page if test already passed
+
      }
 
 

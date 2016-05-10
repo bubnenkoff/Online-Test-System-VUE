@@ -202,11 +202,10 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
                 responseBody["isAdmin"] = true;
             }
 
-            // 
             string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
             auto rq = Request();
             auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
-        
+            
             Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
             visitorsInfo = parseJsonString(rs.responseBody.data!string);
 
@@ -228,19 +227,41 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
     {
         // checkAuthorization запрашивается при каждом обращении к сайту
         // для неавторизованных пользователей нужно проверять в коллекции visitors какие тесты были пройдены
+        // при старте теста когда коллеция пустая вернется пустой result поэтому нужно ниже проверять не пуст ли он прежде чем брать элементы
         string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
         auto rq = Request();
         auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
-    
+
         Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
         visitorsInfo = parseJsonString(rs.responseBody.data!string);
-
+  
         // filling passed tests for this IP
         //incoming JSON is:
         // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
         // result is array, so [0] it's first element
-        Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
-        responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client
+        
+        // FIXME Падает при пустой коллекци visitors
+
+        //if(visitorsInfo["result"].empty && visitorsInfo["result"] == `[]`)
+        //{
+        //    writeln("0000000000");
+
+        //}
+        //FIXME смотри выше
+
+        //writeln(visitorsInfo["result"][0]["passedtests"]);
+        writeln(visitorsInfo["result"]);
+        if (visitorsInfo["result"].toString != `[]`) // FIXME нужно как-то покрасивее это сделать
+        {
+            Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
+            responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client    
+        }
+        else
+        {
+            responseStatus["passedtests"] = `[]`;
+            //FIXME при первом запуске если коллекция visitors пустая в консоли вылетает ошибка 500 потом дальше норм.
+        }
+
 
         responseStatus["status"] = "fail"; // unauthorized user
         writeln(responseStatus);
@@ -269,7 +290,7 @@ void questions(HTTPServerRequest req, HTTPServerResponse res)
     res.writeBody("Hello, World!", "text/plain");  // FIXME
 
     runTask(toDelegate(&sendVisitorInformationToArangoDB), req); // для каждого кто нажал кнопку отправить сохраняем всю инфу, чтобы потом не показывать пройденный тест
-  //  runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
+    runTask(toDelegate(&sendQuestionsToArangoDB), questions); // сами ответы пользователей
 
 }
 
@@ -407,12 +428,12 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req)  // только д
 
                     string queryUpdate = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ visitordata.ip ~ `' UPDATE v WITH {passedtests: '` ~ result_test ~ `'} IN visitors"}`; 
                     writeln(queryUpdate);
-                    readln;
+                   // readln;
 
                     import std.net.curl;
                     auto content = post(aqlUrl, queryUpdate);
                     writeln("check DB");
-                    readln;
+                    //readln;
                     
                     // очищаем строку
                     result_test = [];

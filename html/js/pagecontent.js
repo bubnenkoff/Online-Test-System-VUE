@@ -97,7 +97,8 @@ var guestContent = Vue.extend({
                     { 
                        if(question.username) // small hack to process only questions. We also have {user: name}
                        {
-                          App.currenttestName = question.username;
+                          App.currenttestName = question.testname;
+
                        }
                    }
 
