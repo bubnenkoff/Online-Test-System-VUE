@@ -211,13 +211,18 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
 
             // filling passed tests for this IP
             //incoming JSON is:
-            // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
+            // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest1,firsttest2]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
             // result is array, so [0] it's first element
-            Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
-            responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client
+            if (visitorsInfo["result"] == Json.Type.string) // if "result":[], have some data inside []
+            {
+                Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
+                responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client    
+            }
 
+            // Проверить JSON который выше куда он и как
             res.writeJsonBody(responseStatus);
             logInfo(responseStatus.toString); // include responseBody
+
         }
     //example: {"login":{"isAuthorized":true,"isAdmin":false,"username":"test"},"status":"success"}
 
@@ -234,40 +239,19 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
 
         Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
         visitorsInfo = parseJsonString(rs.responseBody.data!string);
-  
-        // filling passed tests for this IP
-        //incoming JSON is:
-        // {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8]","guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
-        // result is array, so [0] it's first element
-        
-        // FIXME Падает при пустой коллекци visitors
 
-        //if(visitorsInfo["result"].empty && visitorsInfo["result"] == `[]`)
-        //{
-        //    writeln("0000000000");
+        responseStatus["status"] = "success";
+        responseBody["isAuthorized"] = false;
+        responseBody["isAdmin"] = false;
+        responseBody["username"] = "guest";
+        responseBody["passedtests"] = visitorsInfo["result"][0]["passedtests"].get!string;
+        responseStatus["login"] = responseBody;
 
-        //}
-        //FIXME смотри выше
-
-        //writeln(visitorsInfo["result"][0]["passedtests"]);
-        writeln(visitorsInfo["result"]);
-        if (visitorsInfo["result"].toString != `[]`) // FIXME нужно как-то покрасивее это сделать
-        {
-            Json passedtestsJson = visitorsInfo["result"][0]["passedtests"]; // "[firsttest1,firsttest2]"
-            responseStatus["passedtests"] = passedtestsJson.get!(string); // [firsttest1,firsttest2] // passedtests that we will send to client    
-        }
-        else
-        {
-            responseStatus["passedtests"] = `[]`;
-            //FIXME при первом запуске если коллекция visitors пустая в консоли вылетает ошибка 500 потом дальше норм.
-        }
-
-
-        responseStatus["status"] = "fail"; // unauthorized user
+        writeln("111111111111111111111111111111111111");
         writeln(responseStatus);
+        writeln("000000000000000000000000000000000000");
         res.writeJsonBody(responseStatus);
 
-        // {"passedtests":"[firsttest8,firsttest8,firsttest8,firsttest8,firsttest9]","status":"fail"}
 
     }
     logInfo("-----checkAuthorization END-------");
@@ -323,7 +307,6 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
 
     VisitorData visitordata;
 
-
    // visitordata.guid = to!string(randomUUID()); 
     visitordata.ip = req.peer;
 
@@ -334,112 +317,62 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
 
        foreach(Json x; request)
        {
-         passedtestFromCurrentQuestion = to!string(x["testname"]).replace(`"`,``);  // из запроса получаем имя теста из пришедшего Question. Потом имя этого теста нужно отправить в Визиторс
+            if(x["username"].type == Json.Type.string) // if field can't be found on this step it's `undefined`. So passing only field that include username
+            {
+                passedtestFromCurrentQuestion = x["testname"].get!string;
+                writeln("Current testname from browser: ", passedtestFromCurrentQuestion);
+            }
        }
 
         string query = `{"query" : "FOR v in visitors return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;  // делаем выборку гуидов и IP из коллекции
         string aqlUrl = "http://localhost:8529/_db/otest/_api/cursor";
         auto rq2 = Request();
         auto rs2 = rq2.post(aqlUrl, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
-        
-        //writeln(rs2.responseBody.data!string);
-        //writeln("^^^^^^^^^^");
 
         Json visitorsInfo = Json.emptyObject;
-        visitorsInfo = parseJsonString(rs2.responseBody.data!string);
-        //writeln(visitorsInfo["result"]);
-        writeln(visitorsInfo);
-        
-
+        visitorsInfo = parseJsonString(rs2.responseBody.data!string);        
+        // visitorsInfo --> {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":["firsttest1"],"guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
         // foreach не будет работать если это первое обращение с данного ИП и в БД по нему пусто
-        if(visitorsInfo["result"].toString == "[]")
+        if(visitorsInfo["result"] == Json.emptyArray) // если в БД еще ничего нет
         {
-            writeln(visitorsInfo["result"]);
-
-            visitordata.passedtests ~= passedtestFromCurrentQuestion;
-            writeln(visitordata.passedtests);
-
-            Json myJson = visitordata.serializeToJson();
-
-            string qy = myJson.toString;
+            visitordata.passedtests ~= passedtestFromCurrentQuestion; // заполняем поле именем прилетевшего теста
 
             import std.net.curl;
-            auto content = post("http://localhost:8529/_db/otest/_api/document?collection=visitors", qy);
+            auto content = post("http://localhost:8529/_db/otest/_api/document?collection=visitors", visitordata.serializeToJson().toString); // serialize structure to Json and then back to string
             return; // чтобы не делать foreach выходим
-
         }
 
         foreach(Json v;visitorsInfo["result"])
         {
+
            if (to!string(v["ip"]).canFind(visitordata.ip)) // среди тестов уже есть данный ИП то нам нужно получить его гуид и обновить для него список пройденных тестов
            {
-                writeln(to!string(v["passedtests"]));
-                //writeln(v["guid"]);
-                //writeln("passedtestFromCurrentQuestion: ", passedtestFromCurrentQuestion);
-                //writeln("______________________________________________");
-
-                // тут патчим пройденные тесты! к текущему значению passedtests прибавляем значение passedtestFromCurrentQuestion полученное выше
-                // FIXME to!string тут возможно не идеальное, но рабочее решение, иначе массив JSON не получается перебрать
-                // replace заменит ПОЛНОСТЬЮ документ поэтому нам нужен UPDATE
-                if( canFind(to!string(v["passedtests"]), passedtestFromCurrentQuestion || v["passedtests"] == "")) // если тест пуст то нужно чтобы else сработал
+                // НЕ ЗАБЫТЬ ! убрать
+                if(canFind(to!string(v["passedtests"]), passedtestFromCurrentQuestion)) // если тест пуст то нужно чтобы else сработал
                 {
                     // если данный тест уже значится как пройденный
                     writeln("test already passed");
                     //readln;
                 }
-
-
+        
                 else
                 {
-                    // Создаем массив тестов с пройденными тестами из БД для данного пользователя
-                    // FIXME Почему то по нормальному не прибавляет, поэтому HACK
-                   // visitordata.passedtests ~= (v["passedtests"]).toString ~ `,` ~ passedtestFromCurrentQuestion;
-                        visitordata.passedtests ~= (v["passedtests"]).toString.replace(`[\"`,``).replace(`\"]`,``);
-                        if(!(v["passedtests"]).toString.canFind(passedtestFromCurrentQuestion))
-                        {
-                            visitordata.passedtests ~= passedtestFromCurrentQuestion;    
-                        }
-                        
-                   string result_test;
+                    string resultTest;
 
-                   
-                   if(v["passedtests"] == Json.emptyArray) // []
-                   {
-                        result_test = `[` ~ passedtestFromCurrentQuestion ~`]`;
-        
-                   }
+                    resultTest = (v["passedtests"].get!string).replace(`[`,``).replace(`]`,``); // иначе у нас все в виде [firsttest1, foo, bar] 
+                    // нужно к тем значениям что есть в БД прибавить новое, которые прилетело
+                    // любые другие сособы прибавить приводят к тому что получается: [firsttest1, foo, bar], newelement
+                    resultTest ~= `, ` ~ passedtestFromCurrentQuestion;
+                    resultTest = `[` ~ resultTest ~ `]`; // в запрос мы можем только строку вставлять. Она должна быть без кавычек и выглядеть как массив
 
-                   if(v["passedtests"] != Json.emptyArray)
-                   {
-                       result_test = to!string(v["passedtests"]).replace(`]`, `,` ~ passedtestFromCurrentQuestion ~ `]`);
-                   }
-
-                    result_test = result_test.replace(`"`,``);
-
-                   
-                   writeln(result_test);
-                   writeln("=====================");
-                   //readln;
-
-                  
-                    // Записываем в коллекцию тест который был пройден с данного IP чтобы больше его не показывать
-                   // writeln("--> ", result_test);//replace(`"`,``));
-                   // auto x = visitordata.passedtests.map!(x => ""x.writeln);
-
-                    string queryUpdate = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ visitordata.ip ~ `' UPDATE v WITH {passedtests: '` ~ result_test ~ `'} IN visitors"}`; 
+                    string queryUpdate = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ visitordata.ip ~ `' UPDATE v WITH {passedtests: '` ~ resultTest ~ `'} IN visitors"}`; 
                     writeln(queryUpdate);
                    // readln;
 
                     import std.net.curl;
                     auto content = post(aqlUrl, queryUpdate);
-                    writeln("check DB");
-                    //readln;
-                    
-                    // очищаем строку
-                    result_test = [];
 
-                   res.writeJsonBody(Json.emptyArray);
-                    writeln("DONE!!!!!!!!!!");
+                    res.writeJsonBody(Json.emptyArray);
 
                 }
            }

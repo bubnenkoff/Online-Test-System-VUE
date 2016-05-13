@@ -89,24 +89,21 @@ function checkAuth()
 	        }
 	     }
 
-	   if(response.data.status == "fail")
+	   if(response.data.login.isAuthorized == false)
 	   {
 	     console.log("User do not Authorizated!");
 	   } 
 
-	  	App.passedtests = response.data.passedtests; // fill paased tests in App
-	   console.log("This user already passed next tests:");
-	   console.log(App.passedtests);
+	   App.passedtests = response.data.login.passedtests; // fill passed tests in App
+	   console.log("This user already passed next tests: ");
+	   console.log(response.data.login.passedtests);
 
 
-	console.log(this.currenttestName);
-	console.log("_____________________________");
      if(App.passedtests.includes(this.currenttestName) && App.passedtests != `[]`) // check if test from DB for this IP eq current test name for this json set flag //HACK FIXME
      {
+      
       App.testPassed = true; // set App to true. This test is passed
       App.contentView = 'endPage'; // change view of main page if test already passed
-      console.log("11111ffffffffffffff");
-
 
      }
 
