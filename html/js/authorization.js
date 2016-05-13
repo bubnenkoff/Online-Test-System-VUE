@@ -44,6 +44,12 @@ function sendLoginInfo()
           	userLoginNotification("Wrong password for user: " + loginData["username"], "Login failed");	
           }
 
+          else if (response.data.login.password == "ServerSideDBError") //Not Implemented on Server Side
+          {
+          	console.log("Server could not get information from DB. Check server logs");
+          	userLoginNotification("Server could not get information from DB. Check server logs");
+          }
+
         } 
 
 
@@ -98,15 +104,16 @@ function checkAuth()
 	   console.log("This user already passed next tests: ");
 	   console.log(response.data.login.passedtests);
 
+	   if(App.currenttestName != "") // if page do not have test-component App.currenttestName would be empty // Данная проверка походу пока не работает
+	   {
+		     if(App.passedtests.includes(this.currenttestName) && App.passedtests != `[]`) // check if test from DB for this IP eq current test name for this json set flag //HACK FIXME
+		     {
+		      
+		      App.testPassed = true; // set App to true. This test is passed
+		      App.contentView = 'endPage'; // change view of main page if test already passed
 
-     if(App.passedtests.includes(this.currenttestName) && App.passedtests != `[]`) // check if test from DB for this IP eq current test name for this json set flag //HACK FIXME
-     {
-      
-      App.testPassed = true; // set App to true. This test is passed
-      App.contentView = 'endPage'; // change view of main page if test already passed
-
-     }
-
+		     }
+	    }
 
 	    },
 

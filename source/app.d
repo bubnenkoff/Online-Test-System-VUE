@@ -201,7 +201,7 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
             {
                 responseBody["isAdmin"] = true;
             }
-
+            // из-за этого запроса по F5 идет лаг с авторизацией
             string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
             auto rq = Request();
             auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
@@ -247,13 +247,11 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
         responseBody["passedtests"] = visitorsInfo["result"][0]["passedtests"].get!string;
         responseStatus["login"] = responseBody;
 
-        writeln("111111111111111111111111111111111111");
         writeln(responseStatus);
-        writeln("000000000000000000000000000000000000");
         res.writeJsonBody(responseStatus);
 
-
     }
+
     logInfo("-----checkAuthorization END-------");
 
 
@@ -419,7 +417,6 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
     writeln("^-----------------------------------------------^");
     //readln;
 
-
     try
     {      
 
@@ -427,10 +424,17 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
         Json responseStatus = Json.emptyObject;
         Json responseBody = Json.emptyObject;  //should be _in_
        
+        if(usersInDB.length == 0)
+        {
+            writeln("No users for iteration in usersInDB. DB is empty?");
+            responseStatus["status"] = "fail";
+
+            res.writeJsonBody(responseStatus); 
+            return;
+        }
 
         foreach(dbuser; usersInDB)
         {
-
             if (dbuser.login == request["username"].to!string && dbuser.password != request["password"].to!string)
             {
                 ////////USER OK PASSWORD WRONG///////////
@@ -518,8 +522,6 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
  
             }
       
-          
-       
 
             else // userDoNotExists
             {
