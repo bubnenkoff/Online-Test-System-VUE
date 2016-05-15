@@ -78,6 +78,19 @@ margin-left: 60px;
   background: var(--vui-green);
 }
 
+.headerimg {
+background-image: url("../img/top.jpg");
+background-size: cover;
+height: 160px; /* Высота шапки */
+
+}
+
+.panel-footer{
+background-image: url("../img/bottom.jpg");
+min-height: 100px;
+background-size: cover;
+}
 
 
-.big-checkbox {width: 15px; height: 15px;}
+
+.big-checkbox {width: 16px; height: 16px;}

@@ -17,7 +17,6 @@ var GuestMenu = Vue.extend({
                   <input type="password" v-model="password" class="form-control" id="Password" placeholder="Password">
                 </div>
               <button type="submit" class="btn btn-default" v-on:click.prevent="sendLoginInfo()">Войти</button>
-              <button type="submit" class="btn btn-default" v-on:click.prevent="checkAuth()">проверка входа</button>
             </form>
         </div>`,
 

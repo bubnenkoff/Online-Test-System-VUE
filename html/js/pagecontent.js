@@ -4,7 +4,7 @@ var guestContent = Vue.extend({
   props: ['value','min','max','step'],
       template: `
 
-        <p>Guest content</p>
+      <!-- <p>Guest content</p> -->
       <div v-for="question in questions">
        <template v-if="question.isEnabled">
           <h3 v-if="question.isEnabled">{{question.question}}</h3>
@@ -16,17 +16,16 @@ var guestContent = Vue.extend({
               <label v-if="question.isRadioButton"><span class="firstLevelAnswer"><input type="radio" class="big-checkbox" name="myvalue"/>{{firstLevelAnswer.answer}}</span></label>
                
                  <div style="display: inline-block;" v-if="firstLevelAnswer.isTextBox"> 
-                    <span v-if="firstLevelAnswer.isSelected"><input type="text" name="myvalue" v-model="firstLevelAnswer.userTextInputValue"/>+ {{firstLevelAnswer.userTextInputValue}}</span>                      
+                    <span v-if="firstLevelAnswer.isSelected"><input type="text" name="myvalue" v-model="firstLevelAnswer.userTextInputValue"/></span>                      
                   </div>                
              
               <span v-if="firstLevelAnswer.isTextInput"><input type="text"/></span>
-                   |  firstLevelAnswer.isSelected: {{firstLevelAnswer.isSelected}} 
 
                    <!-- Second Level -->
                          <div v-if="firstLevelAnswer.isSelected" v-for="secondLevelAnswer in firstLevelAnswer.answers">                          
                             <label v-if="!secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="secondLevelAnswer.isSelected" />{{secondLevelAnswer.answer}}</span></label>
                             <label v-if="secondLevelAnswer.isRadioButton"><span class="secondLevelAnswer"><input type="checkbox" class="big-checkbox" v-model="secondLevelAnswer.isSelected" />{{secondLevelAnswer.answer}}</span></label>                       
-                           |  secondLevelAnswer.isSelected: {{secondLevelAnswer.isSelected}} 
+                    
 
                             <!-- Third Level -->
                                <div v-if="secondLevelAnswer.isSelected">  
@@ -43,9 +42,10 @@ var guestContent = Vue.extend({
       <!-- Slider section -->
      <div v-if="question.isSlider" class="firstLevelSlider"> 
        <div class="v-range-slider">
-          <slot name="left">L</slot>
+          <slot name="left"></slot>
           <input type="range" v-model="question.value" :value.sync="question.value" :min="min" :max="max" :step="step" :name="name">
-          <slot name="right">H</slot>
+          <slot name="right">{{question.value}} км&sup2;</slot>
+
         </div>
       </div>
 
@@ -54,7 +54,6 @@ var guestContent = Vue.extend({
    
   <div class="sendButton"> 
     <button v-on:click="postQuestionsContent()" :disabled="sendButtonDisable" type="button" class="btn btn-success">Отправить</button>
-    {{sendButtonDisable}}
   </div>
 
           `,

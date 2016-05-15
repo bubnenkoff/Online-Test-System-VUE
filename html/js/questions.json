@@ -1,188 +1,1131 @@
-[				{
-					"id": 1, 
-					"question": "Каков уровень Вашей организации?", 
-						"answers": [
-									{
-										"id" : 1,
-										"answer":	"Федеральные органы исполнительной власти",
-										"isSelected" : false,
-										"isDisabled" : false
+[{
+		"id": 1,
+		"question": "Каков тип вашей организации?",
+		"answers": [{
+			"id": 1,
+			"answer": "Федеральные органы исполнительной власти",
+			"isSelected": false,
+			"isDisabled": false
 
-									}, 
-									{	"id" : 2,
-										 "answer": "Региональные органы исполнительной власти",
-										 "isSelected" : false,
-										 "isDisabled" : false
+		}, {
+			"id": 2,
+			"answer": "Региональные органы исполнительной власти",
+			"isSelected": false,
+			"isDisabled": false
 
-									}, 
-									{	 "id" : 3,
-										 "answer": "Местные административные органы управления",
-										 "isSelected" : false,
-										 "isDisabled" : false
+		}, {
+			"id": 3,
+			"answer": "Местные административные исполнительной власти",
+			"isSelected": false,
+			"isDisabled": false
 
-									}, 
-									{	 "id" : 4,
-										 "answer": "Некоммерческие организации",
-										"isSelected" : false,
-										"isDisabled" : false
-									}, 
-									{	 "id" : 5,
-										 "answer": "Частное лицо",
-										 "isSelected" : false,
-										 "isDisabled" : false
-									}, 
-									{	 "id" : 6,
-										 "answer": "Другое",
-										 "isSelected" : false,
-										 "isDisabled" : false,
-										 "isTextBox" : true,
-										 "userTextInputValue" : ""
-									}
-								 ],
-						"MaxAllowedChoice" : 3,
-						"isEnabled" : true,
-						"NowSelected" : 0
+		}, {
+			"id": 4,
+			"answer": "Некоммерческие организации",
+			"isSelected": false,
+			"isDisabled": false
+		}, {
+			"id": 5,
+			"answer": "Частное лицо",
+			"isSelected": false,
+			"isDisabled": false
+		}, {
+			"id": 6,
+			"answer": "Другое",
+			"isSelected": false,
+			"isDisabled": false,
+			"isTextBox": true,
+			"userTextInputValue": ""
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 2,
+		"question": "Название организации",
+		"answers": [{
+			"id": 1,
+			"answer": "Blue",
+			"isSelected": false,
+			"isDisabled": false,
+			"isTextInput": true
+		}]
+	},
+
+	{
+		"id": 3,
+		"question": "Как вы используете данные ДЗЗ?",
+		"answers": [{
+			"id": 1,
+			"answer": "Провайдер (предоставляет данные в пользование других юридических/физических лиц)",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Разработчик методов обработки данных ДЗЗ и создание тематических продуктов на их основе",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Технический пользователь (техническая обработка данных ДЗЗ: калибровка, валидация и др.)",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 4,
+			"answer": "Исследователь (изучение возможностей применения данных ДЗЗ и продуктов их обработки, их характеристик)",
+			"isSelected": false,
+			"isDisabled": false
+		}, {
+			"id": 5,
+			"answer": "Конечный пользователь (использование данных ДЗЗ и продуктов их обработки в личных интересах, включая научные исследования и образование)",
+			"isSelected": false,
+			"isDisabled": false
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+	},
+
+	{
+		"id": 4,
+		"question": "Каковы области использования вами данных ДЗЗ?",
+		"answers": [{
+				"id": 1,
+				"answer": "Сельское хозяйство",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Лесное хозяйство",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 3,
+				"answer": "Водное хозяйство",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 4,
+				"answer": "Мониторинг чрезвычайных ситуаций и катастроф",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 5,
+				"answer": "Экологический мониторинг",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 6,
+				"answer": "Картография",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 7,
+				"answer": "Метеорология",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 8,
+				"answer": "Геология",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 9,
+				"answer": "Транспорт и связь",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 10,
+				"answer": "Электроэнергетика",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 11,
+				"answer": "Недвижимость",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 12,
+				"answer": "Строительство",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 13,
+				"answer": "Государственное управление и безопасность",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 14,
+				"answer": "Финансы",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 15,
+				"answer": "Наука и образование",
+				"isSelected": false,
+				"isDisabled": false
+			},
+
+			{
+				"id": 16,
+				"answer": "Туризм ",
+				"isSelected": false,
+				"isDisabled": false
+			}
 
 
-				},
+		],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+	},
 
-				{
-					"id": 2, 
-					"question": "Какая главная область использования Вами данных ДЗЗ?", "answers": [
-																										{
-																											"id" : 1,
-																											"answer": "Сельское хозяйство",
-																											"answers":
-																													[
-																														{
-																															"id":1,
-																															"answer": "Растеневодство",
-																															"isSelected" : false,
-																															"isDisabled" : false, 
-																															"isRadioButton": true,
-																																"answers":
-																																[
-																																	{
-																																		"id":1,
-																																		"answer": "Розы",
-																																		"isSelected" : false,
-																																		"isDisabled" : false,
-																																		"isRadioButton": true
+	{
+		"id": 5,
+		"question": "Как регулярно используете данные ДЗЗ?",
+		"answers": [{
+			"id": 1,
+			"answer": "Используются постоянно",
+			"isSelected": false,
+			"isDisabled": false
 
-																																	},
-																																	{
-																																		"id":2,
-																																		"answer": "Мимозы",
-																																		"isSelected" : false,
-																																		"isDisabled" : false,
-																																		"isRadioButton": true
-																																		
-																																	},
-																																	{
-																																		"id":3,
-																																		"answer":"Ваш Пункт",
-																																		"isSelected" : false,
-																																		"isDisabled" : false,
-																																		"isTextBox" : true,
-																																		"userTextInputValue" : null
+		}, {
+			"id": 2,
+			"answer": "Используются редко",
+			"isSelected": false,
+			"isDisabled": false
 
-																																	}
-																																	
-																																]
-																																
-																														},
-																														{
-																															"id":2,
-																															"answer": "Животноводство",
-																															"isSelected" : false,
-																															"isDisabled" : false,
-																															"isRadioButton": true
-																															
-																														}
-																													],
-																											"isSelected" : false,
-																											"isDisabled" : false
+		}, {
+			"id": 3,
+			"answer": "Используются впервые",
+			"isSelected": false,
+			"isDisabled": false
 
-																										}, 
-																										{
-																											"id" : 2,
-																											"answer": "Лесное хозяйство",
-																											"answers":
-																													[
-																														{
-																															"id":1,
-																															"answer": "Вырубки",
-																															"isSelected" : false,
-																															"isDisabled" : false
-																														},
-																														{
-																															"id":2,
-																															"answer": "Состояние лесонасаждений",
-																															"isSelected" : false,
-																															"isDisabled" : false
-																														}
-																													],																											
-																											"isSelected" : false,
-																											"isDisabled" : false
-																										},
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
 
-																										{
-																											"id": 3,
-																											"answer": "Землепользование",
-																											"isSelected" : false,
-																											"isDisabled" : false
-																										}
-																									  ],
-					"MaxAllowedChoice" : 2,
-					"isEnabled" : true,
-					"isSelected" : false,
-					"isDisabled" : false,
-					"NowSelected" : 0
-				},
+	},
 
-				{
-					"id": 3, "question": "What is your name?", "answers": [
-																			{"id": 1, "answer" : "Dima", "isSelected" : false, "isDisabled" : false}, 
-																			{"id": 2, "answer": "Roma", "isSelected" : false, "isDisabled" : false}, 
-																			{"id": 3, "answer": "Masha", "isSelected" : false, "isDisabled" : false}],
-					"MaxAllowedChoice" : 2,
-					"isEnabled" : true,
-					"NowSelected" : 0,
-					"isDisabled" : false
-				},
-				
-				
-				{
-					"id": 4, "question": "Select one color", "answers": [
-																			{"id": 1, "answer" : "Green", "isSelected" : false, "isDisabled" : false}, 
-																			{"id": 2, "answer": "Red", "isSelected" : false, "isDisabled" : false}, 
-																			{"id": 3, "answer": "Blue", "isSelected" : false, "isDisabled" : false, "isTextInput": true}],
-					"MaxAllowedChoice" : 2,
-					"isEnabled" : true,
-					"NowSelected" : 0,
-					"isSelected" : false,
-					"isDisabled" : false,
-					"isRadioButton": true
-				},
+	{
+		"id": 6,
+		"question": "Чьи данные обычно используются?",
+		"answers": [{
+			"id": 1,
+			"answer": "Зарубежные",
+			"isSelected": false,
+			"isDisabled": false
 
-				{
-					"id": 5,
-					"question": "Select Range",
-					"isSlider" : true,
-					"isEnabled" : true,
-					"minValue" : 0,
-					"maxValue" : 0,
-					"value" : 0,
-					"isEnabled" : true,
-					"answers": []
-				},
-				{
-					"username": "guest",
-					"datetime": "",
-					"testname": "firsttest3"
-				}
+		}, {
+			"id": 2,
+			"answer": "Отечественные",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Из разных источников",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 7,
+		"question": "Какие данные используются по условию распространения?",
+		"answers": [{
+			"id": 1,
+			"answer": "Открытые",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Коммерческие",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Полученные бесплатно на основании «Основ государственной политики РФ в области космической деятельности»",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 8,
+		"question": "Насколько важны данные ДЗЗ для решения ваших задач?",
+		"answers": [{
+			"id": 1,
+			"answer": "Основной источник информации",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Получение дополнительной информации",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Контроль полученных результатов",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 4,
+			"answer": "В настоящее время данные не используются",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 2,
+		"question": "Какие российские данные чаще всего используете?",
+		"answers": [{
+				"id": 1,
+				"id": 1,
+				"answer": "Геотон",
+				"isSelected": false,
+				"isDisabled": false,
+				"isRadioButton": true,
+				"answers": [{
+						"id": 1,
+						"answer": "Панхром",
+						"isSelected": false,
+						"isDisabled": false,
+						"isRadioButton": true
+
+					}, {
+						"id": 2,
+						"answer": "Мультиспектр",
+						"isSelected": false,
+						"isDisabled": false,
+						"isRadioButton": true
+
+					}, {
+						"id": 3,
+						"answer": "ШМСА-ВР",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+
+					}, {
+						"id": 4,
+						"answer": "ШМСА-СР",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+
+					}, {
+						"id": 5,
+						"answer": "ШМСА-ВР",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+
+					}, {
+						"id": 6,
+						"answer": "ГСА",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+					},
+
+					{
+						"id": 2,
+						"answer": "КА Канопус-В",
+						"answers": [{
+							"id": 1,
+							"answer": "ПСС",
+							"isSelected": false,
+							"isDisabled": false
+						}, {
+							"id": 2,
+							"answer": "МСС",
+							"isSelected": false,
+							"isDisabled": false
+						}],
+						"isSelected": false,
+						"isDisabled": false
+					},
+
+					{
+						"id": 3,
+						"answer": "КА Метеор-М",
+						"answers": [{
+							"id": 1,
+							"answer": "КМСС",
+							"isSelected": false,
+							"isDisabled": false
+						}, {
+							"id": 2,
+							"answer": "МСУ-МР",
+							"isSelected": false,
+							"isDisabled": false
+						}],
+						"isSelected": false,
+						"isDisabled": false
+					}, {
+						"id": 4,
+						"answer": "КА Электро-Л",
+						"answers": [{
+							"id": 1,
+							"answer": "КМСС",
+							"isSelected": false,
+							"isDisabled": false
+						}],
+						"isSelected": false,
+						"isDisabled": false
+					},
+
+
+					{
+						"id": 3,
+						"answer": "Землепользование",
+						"isSelected": false,
+						"isDisabled": false
+					}
+				],
+				"MaxAllowedChoice": 2,
+				"isEnabled": true,
+				"isSelected": false,
+				"isDisabled": false,
+				"NowSelected": 0
+			}
+
+		]
+
+	},
+
+	{
+		"id": 1,
+		"question": "Какой уровень обработки получаемых данных?",
+		"answers": [{
+			"id": 1,
+			"answer": "Cнимок с радиометрической и геометрической коррекцией, без трансформирования в картографическую проекцию",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Cнимок с радиометрической и геометрической коррекцией, трансформированный в картографическую проекцию по данным бортовой автоматической системы",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Снимок, ортотрансформированный в картографическую проекцию по опорным точкам местности (ОТМ) с подключением ЦМР",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 4,
+			"answer": "Мозаичное изображение из снимков",
+			"isSelected": false,
+			"isDisabled": false
+		}, {
+			"id": 5,
+			"answer": "Комплексированное изображение панхроматического и многоспектрального снимков одной и той же территории",
+			"isSelected": false,
+			"isDisabled": false
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 9,
+		"question": "Площадь территории",
+		"isSlider": true,
+		"isEnabled": true,
+		"minValue": 0,
+		"maxValue": 0,
+		"value": 0,
+		"isEnabled": true,
+		"answers": []
+	}, {
+		"id": 1,
+		"question": "Оперативность съемки",
+		"answers": [{
+			"id": 1,
+			"answer": "Архивные данные",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Данные оперативной съемки",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 10,
+		"question": "Выполняется ли доработка данных после получения?",
+		"answers": [{
+			"id": 1,
+			"answer": "Атмосферная коррекция",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Радиометрическая коррекция",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 3,
+			"answer": "Уточнение географической привязки",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 4,
+			"answer": "Другое",
+			"isSelected": false,
+			"isDisabled": false,
+			"isTextBox": true,
+			"userTextInputValue": ""
+		}],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 11,
+		"question": "Какая тематическая обработка выполняется после получения данных?",
+		"answers": [{
+				"id": 1,
+				"answer": "Векторизация/дешифрирование объектов",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Расчет вегетационных индексов",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 3,
+				"answer": "Создание мультивременных композитов",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Классификация изображений",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 5,
+				"answer": "Другое",
+				"isSelected": false,
+				"isDisabled": false,
+				"isTextBox": true,
+				"userTextInputValue": ""
+			}
+		],
+		"MaxAllowedChoice": 3,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 12,
+		"question": "Используются ли данные для загрузки в собственные геосервисы?",
+		"answers": [{
+			"id": 1,
+			"answer": "Да",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Нет",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 12,
+		"question": "Использовался ли Геопортал Роскосмоса для поиска данных?",
+		"answers": [{
+			"id": 1,
+			"answer": "Да",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Нет",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 13,
+		"question": "Пространственное разрешение?",
+		"answers": [{
+				"id": 1,
+				"answer": "Низкое (> 250 м)",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Среднее (100 - 250 м)",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 3,
+				"answer": "Среднее (10 - 100 м)",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Высокое (1 - 10 м)",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 5,
+				"answer": "Сверхвысокое (< 1 м)",
+				"isSelected": false,
+				"isDisabled": false
+			}
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 14,
+		"question": "Уровень обработки данных",
+		"answers": [{
+				"id": 1,
+				"answer": "Cнимок с радиометрической и геометрической коррекцией, без трансформирования в картографическую проекцию",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Cнимок с радиометрической и геометрической коррекцией, трансформированный в картографическую проекцию по данным бортовой автоматической системы",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 3,
+				"answer": "Cнимок, ортотрансформированный в картографическую проекцию по опорным точкам местности (ОТМ) с подключением ЦМР)",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Мозаичное изображение из снимков",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 5,
+				"answer": "Комплексированное изображение панхроматического и многоспектрального снимков одной и той же территории",
+				"isSelected": false,
+				"isDisabled": false
+			}
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 15,
+		"question": "Точность географической привязки",
+		"answers": [{
+			"id": 1,
+			"answer": "Критична",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Не критична",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+	{
+		"id": 16,
+		"question": "Тип данных",
+		"answers": [{
+				"id": 1,
+				"answer": "Панхроматические",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Мультиспектральные",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Гиперспектральные",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 4,
+				"answer": "Радиолокационные",
+				"isSelected": false,
+				"isDisabled": false
+
+			}
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 16,
+		"question": "Спектральный диапазон",
+		"answers": [{
+				"id": 1,
+				"answer": "Ультрафиолетовый",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Видимый",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Ближний ИК",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 4,
+				"answer": "Дальний ИК и температурный",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 5,
+				"answer": "Радиодиапазон",
+				"isSelected": false,
+				"isDisabled": false
+
+			}
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 17,
+		"question": "Сезон съемки",
+		"answers": [{
+				"id": 1,
+				"answer": "Весна",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Лето",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Осень",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 4,
+				"answer": "Зима",
+				"isSelected": false,
+				"isDisabled": false
+
+			}
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+
+	{
+		"id": 17,
+		"question": "Периодичность съемки",
+		"answers": [{
+				"id": 1,
+				"answer": "Несколько раз в день",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Ежедневно",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Раз в 3-5 дней",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 4,
+				"answer": "Раз в 10 дней",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 5,
+				"answer": "Раз в месяц",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 6,
+				"answer": "Раз в 3 месяца",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 7,
+				"answer": "Раз в 6 месяцев",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+
+			{
+				"id": 8,
+				"answer": "Раз в год",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 9,
+				"answer": "Однократно",
+				"isSelected": false,
+				"isDisabled": false
+
+			}
+
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+
+
+	{
+		"id": 18,
+		"question": "Актуальность данных",
+		"answers": [{
+				"id": 1,
+				"answer": "Заказ съемкиь",
+				"isSelected": false,
+				"isDisabled": false
+
+			}, {
+				"id": 2,
+				"answer": "Архивные данные с жесткой привязкой к дате",
+				"isSelected": false,
+				"isDisabled": false
+
+			},
+
+			{
+				"id": 3,
+				"answer": "Любые архивные данные",
+				"isSelected": false,
+				"isDisabled": false
+
+			}
+
+		],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	},
+{
+	"id": 2,
+	"question": "Какие российские данные чаще всего используете?",
+	"answers": [{
+			"id": 1,
+			"answer": "КА Ресурс-П",
+			"answers": [{
+				"id": 1,
+				"answer": "Геотон",
+				"isSelected": false,
+				"isDisabled": false,
+				"isRadioButton": true,
+				"answers": [{
+						"id": 1,
+						"answer": "Панхром",
+						"isSelected": false,
+						"isDisabled": false,
+						"isRadioButton": true
+
+					}, {
+						"id": 2,
+						"answer": "Мультиспектр",
+						"isSelected": false,
+						"isDisabled": false,
+						"isRadioButton": true
+
+					}, {
+						"id": 3,
+						"answer": "ШМСА-ВР",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+
+					},
+
+					{
+						"id": 3,
+						"answer": "ГСА",
+						"isSelected": false,
+						"isDisabled": false,
+						"isTextBox": true,
+						"userTextInputValue": null
+
+					}
+
+				]
+
+			}],
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "КА Канопус-В",
+			"answers": [{
+				"id": 1,
+				"answer": "ПСС",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 2,
+				"answer": "МСС",
+				"isSelected": false,
+				"isDisabled": false
+			}],
+			"isSelected": false,
+			"isDisabled": false
+		},
+
+		{
+			"id": 2,
+			"answer": "КА Метеор-М",
+			"answers": [{
+				"id": 1,
+				"answer": "КМСС",
+				"isSelected": false,
+				"isDisabled": false
+			}, {
+				"id": 2,
+				"answer": "МСУ-МР",
+				"isSelected": false,
+				"isDisabled": false
+			}],
+			"isSelected": false,
+			"isDisabled": false
+		},
+
+		{
+			"id": 2,
+			"answer": "КА Электро-Л",
+			"answers": [{
+				"id": 1,
+				"answer": "КМСС",
+				"isSelected": false,
+				"isDisabled": false
+			}],
+			"isSelected": false,
+			"isDisabled": false
+		}
+
+
+
+	],
+	"MaxAllowedChoice": 2,
+	"isEnabled": true,
+	"isSelected": false,
+	"isDisabled": false,
+	"NowSelected": 0
+},
+
+	{
+		"id": 18,
+		"question": "Оперативность получаемых данных",
+		"answers": [{
+			"id": 1,
+			"answer": "Максимальная",
+			"isSelected": false,
+			"isDisabled": false
+
+		}, {
+			"id": 2,
+			"answer": "Не принципиальна",
+			"isSelected": false,
+			"isDisabled": false
+
+		}],
+		"MaxAllowedChoice": 1,
+		"isEnabled": true,
+		"NowSelected": 0
+
+	}
+
 
 ]
-
-
-   

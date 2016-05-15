@@ -17,11 +17,15 @@
 		<div id="app">
 			<div class="container-fluid">
 				<nav class="navbar navbar-default">
-					<div class="container-fluid">
-						<div class="navbar-header">
-							<a class="navbar-brand" href="#">
-								<img alt="Brand" src="">
-							</a>
+					<div class="headerimg " >
+						<div class="container-fluid" >
+							
+								<div class="navbar-header" >
+									<a class="navbar-brand" href="#">
+										
+									</a>
+								</div>
+							
 						</div>
 					</div>
 					     <component :username.sync="username" :password.sync="password" :is="topMenuView"></component>
@@ -29,14 +33,14 @@
 				<div>{{password}}</div>
 				</nav>
 				<div class="row">
-					<div class="col-md-2">.col-md-8</div>
+					<div class="col-md-2"><!-- .col-md-8 --></div>
 					<div class="col-md-10">
 							<component :is="contentView"></component>
 					</div>
 				</div>
 
 				<div class="panel panel-default">
-					<div class="panel-footer">Panel footer</div>
+					<div class="panel-footer">РКС (с)</div>
 				</div>
 			</div>
 		</div>

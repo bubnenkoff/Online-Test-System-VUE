@@ -101,11 +101,13 @@ function checkAuth()
 	   } 
 
 	   App.passedtests = response.data.login.passedtests; // fill passed tests in App
-	   console.log("This user already passed next tests: ");
-	   console.log(response.data.login.passedtests);
 
 	   if(App.currenttestName != "") // if page do not have test-component App.currenttestName would be empty // Данная проверка походу пока не работает
 	   {
+		     
+	   		console.log("This user already passed next tests: ");
+	   		console.log(response.data.login.passedtests);
+
 		     if(App.passedtests.includes(this.currenttestName) && App.passedtests != `[]`) // check if test from DB for this IP eq current test name for this json set flag //HACK FIXME
 		     {
 		      
