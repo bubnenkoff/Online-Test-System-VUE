@@ -233,6 +233,7 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
         // checkAuthorization запрашивается при каждом обращении к сайту
         // для неавторизованных пользователей нужно проверять в коллекции visitors какие тесты были пройдены
         // при старте теста когда коллеция пустая вернется пустой result поэтому нужно ниже проверять не пуст ли он прежде чем брать элементы
+
         string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
         auto rq = Request();
         auto rs = rq.post(cursorURL, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
@@ -240,15 +241,25 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
         Json visitorsInfo = Json.emptyObject; // JSON array of data for current IP: {guid: v.guid, ip: v.ip, passedtests: v.passedtests}
         visitorsInfo = parseJsonString(rs.responseBody.data!string);
 
+
         responseStatus["status"] = "success";
         responseBody["isAuthorized"] = false;
         responseBody["isAdmin"] = false;
         responseBody["username"] = "guest";
-        responseBody["passedtests"] = visitorsInfo["result"][0]["passedtests"].get!string;
+        if(visitorsInfo["result"] == Json.emptyArray) // если в БД еще ничего нет -- у нас первый запрос
+        {
+            responseBody["passedtests"] = "";
+        }
+        else
+        {
+            responseBody["passedtests"] = visitorsInfo["result"][0]["passedtests"].get!string; //FIXME будет падать если поле пустое!        
+        }
+        
         responseStatus["login"] = responseBody;
 
         writeln(responseStatus);
         res.writeJsonBody(responseStatus);
+        writeln("33333333333333333333333333");
 
     }
 
@@ -326,15 +337,16 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
         string aqlUrl = "http://localhost:8529/_db/otest/_api/cursor";
         auto rq2 = Request();
         auto rs2 = rq2.post(aqlUrl, query , "application/json"); // тут у нас не [] а {} поэтому можно без key
-
+       
         Json visitorsInfo = Json.emptyObject;
-        visitorsInfo = parseJsonString(rs2.responseBody.data!string);        
+        visitorsInfo = parseJsonString(rs2.responseBody.data!string);
+       
         // visitorsInfo --> {"hasMore":false,"result":[{"ip":"127.0.0.1","passedtests":["firsttest1"],"guid":""}],"code":201,"extra":{"stats":{"writesIgnored":0,"scannedIndex":0,"scannedFull":1,"executionTime":0,"filtered":0,"writesExecuted":0},"warnings":[]},"error":false,"cached":false}
         // foreach не будет работать если это первое обращение с данного ИП и в БД по нему пусто
         if(visitorsInfo["result"] == Json.emptyArray) // если в БД еще ничего нет
         {
             visitordata.passedtests ~= passedtestFromCurrentQuestion; // заполняем поле именем прилетевшего теста
-
+            
             import std.net.curl;
             auto content = post("http://localhost:8529/_db/otest/_api/document?collection=visitors", visitordata.serializeToJson().toString); // serialize structure to Json and then back to string
             return; // чтобы не делать foreach выходим
@@ -342,9 +354,14 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
 
         foreach(Json v;visitorsInfo["result"])
         {
-
+            //writeln("0000000");
+            writeln(v);
+            writeln(to!string(v["passedtests"]));
+            writeln(passedtestFromCurrentQuestion);
+            writeln("1111111");
            if (to!string(v["ip"]).canFind(visitordata.ip)) // среди тестов уже есть данный ИП то нам нужно получить его гуид и обновить для него список пройденных тестов
            {
+                writeln("we are here");
                 // НЕ ЗАБЫТЬ ! убрать
                 if(canFind(to!string(v["passedtests"]), passedtestFromCurrentQuestion)) // если тест пуст то нужно чтобы else сработал
                 {
@@ -356,8 +373,15 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
                 else
                 {
                     string resultTest;
-
-                    resultTest = (v["passedtests"].get!string).replace(`[`,``).replace(`]`,``); // иначе у нас все в виде [firsttest1, foo, bar] 
+                    writeln("111111111144444444");
+                    // FIXME: Ниже выпадает: Task terminated with uncaught exception: Got JSON of type array, expected string.
+                    if (v["passedtests"].get!string != `[""]`) // Если он у нас не пустой
+                    {
+                        writeln("aaaa");
+                        writeln(v["passedtests"]);
+                        resultTest = (v["passedtests"].get!string).replace(`[`,``).replace(`]`,``); // иначе у нас все в виде [firsttest1, foo, bar] 
+                    }
+                    writeln("resultTest: ", resultTest);
                     // нужно к тем значениям что есть в БД прибавить новое, которые прилетело
                     // любые другие сособы прибавить приводят к тому что получается: [firsttest1, foo, bar], newelement
                     resultTest ~= `, ` ~ passedtestFromCurrentQuestion;
