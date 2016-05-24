@@ -259,7 +259,6 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
 
         writeln(responseStatus);
         res.writeJsonBody(responseStatus);
-        writeln("33333333333333333333333333");
 
     }
 
@@ -373,7 +372,6 @@ void sendVisitorInformationToArangoDB(HTTPServerRequest req, HTTPServerResponse 
                 else
                 {
                     string resultTest;
-                    writeln("111111111144444444");
                     // FIXME: Ниже выпадает: Task terminated with uncaught exception: Got JSON of type array, expected string.
                     if (v["passedtests"].get!string != `[""]`) // Если он у нас не пустой
                     {
