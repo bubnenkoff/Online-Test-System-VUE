@@ -7,12 +7,14 @@ import std.path;
 import std.file;
 import std.experimental.logger;
 
-
+import draft.database;
 import parseconfig;
 import dbconnect;
 import users;
 
-import requests.http;
+import requests;
+pragma(lib, "ssl");
+pragma(lib, "crypto");
 
 //DateTime currentdt;
 //static this()
@@ -97,85 +99,9 @@ Tuple!(string, "login", string, "password") [] usersInDB;
 void getUsersFromDB()
 {
    
-try
-{
-   // List of documents in collection
-    string url = "http://localhost:8529/_db/otest/_api/document/?collection=users"; 
-    import std.experimental.logger;
-    globalLogLevel(LogLevel.error);
-
-
-    Json mycollection = Json.emptyObject;
-  
-     auto rq = Request();
-     auto rs = rq.get(url);
-     writeln(rs.responseBody.data!string);
-     mycollection = parseJsonString(rs.responseBody.data!string);
-     if (rs.code != 200)
-        writeln("Can't get list of documents in collection");
-     if (rs.code == 404)
-        writeln("URL do not exists: ", url);
-
-     string [] listOfDocumentsInUsers;   
-   
-     foreach(Json d;mycollection["documents"])
-     {
-        listOfDocumentsInUsers ~= baseURL ~ to!string(d).replace(`"`,``);
-
-     }
-
-
-     Tuple!(string, "login", string, "password") user;
-
-     Json userJson = Json.emptyObject;
-     auto rq1 = Request();
-     foreach(link; listOfDocumentsInUsers)
-     {
-        auto rs1 = rq1.get(link);
-        //userJson = parseJsonString(rs1.responseBody.data!string);
-        userJson = parseJsonString(rs1.responseBody.data!string);
-        user.login = to!string(userJson["login"]).replace(`"`,"");
-        user.password = to!string(userJson["password"]).replace(`"`,"");
-        usersInDB ~= user;
-     }
-}
-
-    catch (Exception e)
-    {
-        writeln(e.msg);
-        writeln("Can't connect to ArangoDB");
-    }
-
-/*
-{
- USERS table: 
-{
-    "login": "admin",
-    "password": "123",
-    "type": "user",
-    "firstname": "",
-    "lastname": "",
-    "organization": "",
-    "lastvisit": "",
-    "ip": "",
-    "tests" : 
-        {
-            "allowed": [],
-            "passed": []
-        }
-}
-
-
-//same as string:
-//    db.users.save({"login":"admin","password":"123","type":"user","firstname":"","lastname":"","organization":"","lastvisit":"","ip":"","tests":{"allowed":[],"passed":[]}})
-
-//-----------------
-
-VISITORS table:
-db.visitors.save({"ip": "", "date": "", "cookie": "", "referal": "", "location": "", "language" : "", "browser" : "", "passedtests" : []})
-
-
-*/
+    auto db = DataBase("system.db"); // users and visitors information
+    auto usersCollection = db.collection!User("Users", true); // base on struct User
+    
 
 }
 
@@ -195,7 +121,7 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
             responseStatus["status"] = "success";
             responseBody["isAuthorized"] = true;
             responseBody["isAdmin"] = false;
-            responseBody["username"] = _auth.user.username;
+            responseBody["username"] = _auth.user.login;
             responseStatus["login"] = responseBody;
             if(_auth.isAdmin)
             {
@@ -492,7 +418,7 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                 try
                   {
                        _auth.isAdmin = true; 
-                       _auth.user.username = "admin"; 
+                       _auth.user.login = "admin"; 
                        //req.session.set("username", "admin"); //ditto
                        req.session.set!string("username", "admin");
 
@@ -520,7 +446,7 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
                     try
                     {
                        req.session.set("username", dbuser.login); //set current username in parameter of session name
-                        _auth.user.username = dbuser.login; //set field
+                        _auth.user.login = dbuser.login; //set field
 
                        responseStatus["status"] = "success";
                        responseBody["isAuthorized"] = true;

@@ -54,7 +54,6 @@ this()
 		catch(Exception msg)
 		{
 			writeln(msg.msg);
-			core.thread.Thread.sleep( dur!("msecs")(1000));
 		}	
 	}
 

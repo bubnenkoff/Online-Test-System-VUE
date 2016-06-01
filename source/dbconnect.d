@@ -10,7 +10,7 @@ import std.range;
 import std.format;
 import std.algorithm;
 import std.datetime;
-import requests.http;
+import requests;
 
 import parseconfig;
 

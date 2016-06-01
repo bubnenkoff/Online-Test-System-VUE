@@ -7,7 +7,7 @@
 		"memutils": "0.4.5",
 		"mysql-native": "0.1.4",
 		"openssl": "1.1.4+1.0.1g",
-		"requests": "0.1.0",
-		"vibe-d": "0.7.29-beta.1"
+		"requests": "0.1.5",
+		"vibe-d": "0.7.30-alpha.1"
 	}
 }
