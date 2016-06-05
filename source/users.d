@@ -8,7 +8,7 @@ struct User
 	string usergroup;
 	string organization;
 	string email;
-	string [] passedtests;
+	//string [] passedtests;
 }
 
 struct AuthInfo

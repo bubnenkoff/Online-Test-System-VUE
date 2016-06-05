@@ -34,6 +34,8 @@ static this()
 
 Config config;
 
+string dbname = "system.db"; // default database name
+
 string baseURL = "http://localhost:8529";
 string collectionVisitorsUrl = "http://localhost:8529/_db/otest/_api/document/?collection=visitors"; // info about passed test for everyone who press
 string cursorURL = "http://localhost:8529/_db/otest/_api/cursor";
@@ -53,6 +55,7 @@ void main()
         return;
     }
 
+    dbSetup(); // first run
     getUsersFromDB();
 
     auto router = new URLRouter;
@@ -94,14 +97,58 @@ void accControl(HTTPServerRequest req, HTTPServerResponse res)
 
 AuthInfo _auth;
 
-Tuple!(string, "login", string, "password") [] usersInDB;
+
+void dbSetup()
+{
+    try
+    {
+        //getcwd do not return correct path if run from task shoulder
+        string dbpath = buildPath((thisExePath[0..((thisExePath.lastIndexOf("\\"))+1)]), dbname);
+        if(!dbpath.exists)
+        {
+            writeln("It's seems you are runnining Application first time\n You should set up admin password");
+            auto db = DataBase(dbname); 
+            auto usersCollection = db.collection!User("Users", true); // base on struct User
+            usersCollection.put(User(0, "admin", "123", "admins", "RKS", "foo@foo.ru")); // defaults
+            writeln("[INFO] db with default credentials created");
+        }
+
+        else
+        {
+            writeln("[INFO] db exists");
+            return;
+        }
+    }
+
+    catch(Exception e)
+    {
+        writeln("Can't setup DB");
+        writeln(e.msg);
+    }
+
+
+}
+
+Tuple!(string, "login", string, "password") [] usersInDBKeyPass; // key-value array of all DB users
 
 void getUsersFromDB()
 {
    
-    auto db = DataBase("system.db"); // users and visitors information
+    auto db = DataBase(dbname); // users and visitors information
     auto usersCollection = db.collection!User("Users", true); // base on struct User
-    
+    if (!db.getCollections().canFind("Users"))
+        writeln("[ERROR] DB do not have collection Users");
+
+    auto usersInDb = db.collection!User("Users");
+    writeln(usersInDb);
+    Tuple!(string, "login", string, "password") singleUserInDB; // we need extract only login and pass from collection
+
+    foreach(x;usersInDb)
+    {
+        singleUserInDB.login = x.login;
+        singleUserInDB.password = x.password;
+        usersInDBKeyPass ~= singleUserInDB;
+    }
 
 }
 
@@ -372,16 +419,16 @@ void login(HTTPServerRequest req, HTTPServerResponse res)
         Json responseStatus = Json.emptyObject;
         Json responseBody = Json.emptyObject;  //should be _in_
        
-        if(usersInDB.length == 0)
+        if(usersInDBKeyPass.length == 0)
         {
-            writeln("No users for iteration in usersInDB. DB is empty?");
+            writeln("No users for iteration in usersInDBKeyPass. DB is empty?");
             responseStatus["status"] = "fail";
 
             res.writeJsonBody(responseStatus); 
             return;
         }
 
-        foreach(dbuser; usersInDB)
+        foreach(dbuser; usersInDBKeyPass)
         {
             if (dbuser.login == request["username"].to!string && dbuser.password != request["password"].to!string)
             {

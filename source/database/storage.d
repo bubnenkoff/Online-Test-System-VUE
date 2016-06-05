@@ -7,6 +7,7 @@
 module draft.database.storage;
 
 import std.traits;
+import std.stdio;
 import std.file;
 import std.bitmanip;
 
@@ -301,10 +302,13 @@ struct DbCell
                     {
                         ulong length = item.tupleof[idx].length;
                         data ~= (cast(ubyte*)(&length))[0..8];
-
+						
+						//writeln("---------");
                         foreach (el ; item.tupleof[idx])
                         {
                             data  ~= (cast(ubyte*)&el)[0..ElementType.sizeof];
+							
+						//	writeln("--------");
                         }
                     }
                     else
