@@ -88,7 +88,7 @@ var guestContent = Vue.extend({
           { 
              getQuestionsContent : function()
              {
-                this.$http.get('http://127.0.0.1:8080/js/questions.json').then(function(response)
+                this.$http.get(window.hostname + '/js/questions.json').then(function(response)
                 {
                   this.questions = response.data;
 
@@ -116,7 +116,7 @@ var guestContent = Vue.extend({
              postQuestionsContent : function()
              {
                 this.sendButtonDisable = true;
-                this.$http.post('http://127.0.0.1:8080/questions', JSON.stringify(this.questions)).then(function(response)
+                this.$http.post(window.hostname + '/questions', JSON.stringify(this.questions)).then(function(response)
                 {
                    console.log("Server response: ", response.status);
                    this.sendButtonDisable = true;

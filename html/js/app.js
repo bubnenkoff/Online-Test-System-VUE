@@ -1,3 +1,4 @@
+window.hostname = 'http://127.0.0.1:8080';
 var App = null; // it's global because function behind will overwrite it's with Vue App instance
 window.onload = function() {
 

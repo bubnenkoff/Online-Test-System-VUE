@@ -7,7 +7,7 @@ function sendLoginInfo()
 
       console.log("site login/password: ", loginData); 
 
-      this.$http.post('http://127.0.0.1:8080/login', loginData).then(function (response) {
+      this.$http.post(window.hostname + '/login', loginData).then(function (response) {
         console.log("server response: ", response.data)
 
         if(response.data["status"] == "success") // process only if we got status=success
@@ -72,7 +72,7 @@ function checkAuth()
 
   console.log("Checking if user already have active session"); 
 
-	this.$http.post('http://127.0.0.1:8080/checkAuthorization').then(function (response) {
+	this.$http.post(window.hostname + '/checkAuthorization').then(function (response) {
 	     console.log("server response: ", response.data)
 
 	     if(response.data["status"] == "success") // process only if we got status=success
@@ -137,7 +137,7 @@ function checkAuth()
 	  console.log(loginData);
 	  console.log("-------------------------");
 
-	this.$http.post('http://127.0.0.1:8080/logout', loginData).then(function (response) {
+	this.$http.post(window.hostname + '/logout', loginData).then(function (response) {
 	    console.log("server response: ", response.data)
 	    if(response.data["isAuthorized"] == false)
 	    {
