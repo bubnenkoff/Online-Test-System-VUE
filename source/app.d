@@ -174,6 +174,7 @@ void checkAuthorization(HTTPServerRequest req, HTTPServerResponse res)
             {
                 responseBody["isAdmin"] = true;
             }
+            
             // из-за этого запроса по F5 идет лаг с авторизацией
             string query = `{"query" : "FOR v in visitors FILTER v.ip == '` ~ req.peer ~ `' return {guid: v.guid, ip: v.ip, passedtests: v.passedtests}"}`;
             auto rq = Request();
